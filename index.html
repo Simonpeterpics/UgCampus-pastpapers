@@ -9,8 +9,9 @@
 <style>
 *{box-sizing:border-box;font-family:'Segoe UI',sans-serif;margin:0;padding:0}
 body{background:linear-gradient(135deg,#9333ea,#f97316,#facc15);min-height:100vh;padding:0}
-.header{background:linear-gradient(90deg,#7e22ce 0%,#ec4899 50%,#f97316 100%);padding:16px;display:flex;align-items:center;justify-content:space-between;color:#fff;position:sticky;top:0;z-index:10}
+.header{background:linear-gradient(90deg,#7e22ce,#ec4899,#f97316);padding:16px;display:flex;align-items:center;justify-content:space-between;color:#fff;position:sticky;top:0;z-index:10}
 .header h2{font-size:18px;font-weight:800}
+.icon-btn{background:rgba(255,255,255,0.2);border:none;border-radius:50%;width:38px;height:38px;font-size:20px;cursor:pointer}
 .search-wrap{padding:14px}
 .search input{width:100%;padding:14px 16px 14px 42px;border-radius:16px;border:none;box-shadow:0 4px 15px rgba(0,0,0,0.2);font-size:15px;outline:none}
 .search{position:relative}
@@ -19,55 +20,105 @@ body{background:linear-gradient(135deg,#9333ea,#f97316,#facc15);min-height:100vh
 .filters button{padding:8px 16px;border-radius:20px;border:none;font-weight:700;font-size:13px;cursor:pointer;white-space:nowrap}
 .active{background:#7e22ce;color:#fff}
 .inactive{background:rgba(255,255,255,0.8);color:#7e22ce}
-#list{padding:14px;padding-bottom:90px}
-.card{border-radius:18px;padding:14px;margin-bottom:12px;box-shadow:0 4px 15px rgba(0,0,0,0.15)}
+#list{padding:14px;padding-bottom:120px}
+.card{border-radius:18px;padding:14px;margin-bottom:12px;box-shadow:0 4px 15px rgba(0,0,0,0.15);position:relative}
 .card:nth-child(3n+1){background:#fbcfe8}
 .card:nth-child(3n+2){background:#bfdbfe}
 .card:nth-child(3n+3){background:#fde68a}
 .tag{font-size:11px;font-weight:800;opacity:0.7}
 .card h3{font-size:16px;margin:6px 0;font-weight:800;color:#1e1b4b}
 .card p{font-size:13px;color:#4b5563}
-.btn{margin-top:10px;padding:8px 14px;background:#fff;border:none;border-radius:10px;font-weight:800;box-shadow:0 2px 6px rgba(0,0,0,0.15);cursor:pointer}
-.nav{position:fixed;bottom:12px;left:12px;right:12px;background:linear-gradient(90deg,#ec4899,#f97316);border-radius:22px;display:flex;justify-content:space-around;padding:12px;color:#fff;font-size:12px;font-weight:700}
+.btn{margin-top:10px;padding:8px 14px;background:#fff;border:none;border-radius:10px;font-weight:800;box-shadow:0 2px 6px rgba(0,0,0,0.15);cursor:pointer;margin-right:6px}
+.save-btn{background:#7e22ce;color:#fff}
+.nav{position:fixed;bottom:12px;left:12px;right:12px;background:linear-gradient(90deg,#ec4899,#f97316);border-radius:22px;display:flex;justify-content:space-around;padding:12px;color:#fff;font-size:12px;font-weight:700;z-index:20}
+.nav span{cursor:pointer;padding:6px 10px;border-radius:12px}
+.nav.active-nav{background:rgba(255,255,255,0.3)}
+.modal{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.6);z-index:30;align-items:center;justify-content:center;padding:20px}
+.modal-box{background:#fff;border-radius:18px;padding:20px;width:100%;max-width:350px;text-align:center}
+.modal-box h3{margin-bottom:10px}
+.modal-box button{margin-top:12px;padding:10px 18px;border:none;border-radius:10px;background:#7e22ce;color:#fff;font-weight:700;cursor:pointer}
 </style>
 </head>
 <body>
 <div class="header">
 <h2>✨ UgCampus Pastpapers 🇺🇬</h2>
-<div style="display:flex;gap:12px;font-size:20px"><span>🔔</span><span>👤</span></div>
+<div style="display:flex;gap:8px"><button class="icon-btn" onclick="showModal('notifModal')">🔔</button><button class="icon-btn" onclick="openTab('profile')">👤</button></div>
 </div>
 <div class="search-wrap">
 <div class="search"><input id="q" placeholder="Search courses, papers, years..." oninput="render()"></div>
 </div>
 <div class="filters">
-<button class="active" onclick="filterUni('')">All</button>
-<button class="inactive" onclick="filterUni('KIU')">💜 KIU</button>
-<button class="inactive" onclick="filterUni('MUK')">🔥 MUK</button>
-<button class="inactive" onclick="filterUni('UCU')">✨ UCU</button>
+<button id="f-all" class="active" onclick="filterUni('')">All</button>
+<button id="f-KIU" class="inactive" onclick="filterUni('KIU')">💜 KIU</button>
+<button id="f-MUK" class="inactive" onclick="filterUni('MUK')">🔥 MUK</button>
+<button id="f-UCU" class="inactive" onclick="filterUni('UCU')">✨ UCU</button>
 </div>
 <div id="list"></div>
-<div class="nav"><span>🏠 Home</span><span>📚 Saved</span><span>⬇️ Downloads</span><span>👤 Profile</span></div>
+
+<div class="nav">
+<span id="nav-home" class="active-nav" onclick="openTab('home')">🏠 Home</span>
+<span id="nav-saved" onclick="openTab('saved')">📚 Saved</span>
+<span id="nav-dl" onclick="openTab('downloads')">⬇️ Downloads</span>
+<span id="nav-profile" onclick="openTab('profile')">👤 Profile</span>
+</div>
+
+<!-- Modals -->
+<div id="notifModal" class="modal" onclick="hideModal('notifModal')"><div class="modal-box"><h3>🔔 Notifications</h3><p>New past papers added for KIU & MUK! Check Home now.</p><button onclick="hideModal('notifModal')">Close</button></div></div>
+<div id="profileModal" class="modal" onclick="hideModal('profileModal')"><div class="modal-box"><h3>👤 Your Profile</h3><p>Uganda Student<br>KIU / MUK / UCU<br><br>Saved: <span id="savedCount">0</span> papers<br>🇺🇬 UgCampus</p><button onclick="hideModal('profileModal')">Close</button><br><br><a href="https://wa.me/256700000000" target="_blank"><button>💬 Contact on WhatsApp</button></a></div></div>
 
 <script>
-let papers=[];let currentFilter='';
+let papers=[];let currentFilter='';let currentTab='home';
+let saved=JSON.parse(localStorage.getItem('savedPapers')||'[]');
+let downloaded=JSON.parse(localStorage.getItem('dlPapers')||'[]');
+
 fetch('papers.json').then(r=>r.json()).then(d=>{papers=d;render();});
-function filterUni(u){currentFilter=u;render();}
-function render(){
-  let q=document.getElementById('q').value.toLowerCase();
-  let html='';
-  papers.filter(p=>{
-    let matchQ=JSON.stringify(p).toLowerCase().includes(q);
-    let matchF=currentFilter? p.uni==currentFilter : true;
-    return matchQ && matchF;
-  }).forEach(p=>{
-    html+=`<div class="card"><div class="tag">${p.uni} • ${p.year} • ${p.questions||'25'} Questions</div><h3>${p.course}: ${p.subject}</h3><p>${p.year} • Past Paper</p><a href="${p.link}" target="_blank"><button class="btn">📄 PDF</button></a></div>`;
-  });
-  if(!html) html='<p style="text-align:center;color:white;margin-top:20px">No papers found 😔</p>';
-  document.getElementById('list').innerHTML=html;
+
+function filterUni(u){
+ currentFilter=u;
+ document.querySelectorAll('.filters button').forEach(b=>b.className='inactive');
+ document.getElementById('f-'+(u||'all')).className='active';
+ render();
 }
+function savePaper(i){
+ let p=papers[i];
+ if(!saved.find(s=>s.subject==p.subject)){saved.push(p);localStorage.setItem('savedPapers',JSON.stringify(saved));alert('✅ Saved: '+p.subject);}
+ else alert('Already saved!');
+ updateCounts();
+}
+function downloadPaper(i){
+ let p=papers[i];
+ if(!downloaded.find(s=>s.subject==p.subject)){downloaded.push(p);localStorage.setItem('dlPapers',JSON.stringify(downloaded));}
+ window.open(p.link,'_blank');
+ updateCounts();
+}
+function updateCounts(){document.getElementById('savedCount').innerText=saved.length;}
+function render(){
+ let q=document.getElementById('q').value.toLowerCase();
+ let listData = currentTab=='home'? papers : currentTab=='saved'? saved : currentTab=='downloads'? downloaded : [];
+ let html='';
+ listData.filter(p=>{
+   let matchQ=JSON.stringify(p).toLowerCase().includes(q);
+   let matchF=currentFilter? p.uni==currentFilter : true;
+   return matchQ && matchF;
+ }).forEach((p, idx)=>{
+   let realIdx = papers.indexOf(p); if(realIdx==-1) realIdx=idx;
+   html+=`<div class="card"><div class="tag">${p.uni} • ${p.year} • ${p.questions||'25'} Questions</div><h3>${p.course}: ${p.subject}</h3><p>${p.year} • Past Paper</p><button class="btn" onclick="downloadPaper(${realIdx})">📄 PDF</button><button class="btn save-btn" onclick="savePaper(${realIdx})">💾 Save</button></div>`;
+ });
+ if(currentTab=='profile'){showModal('profileModal'); html='<div style="text-align:center;color:white;margin-top:30px"><h2>👤 Profile</h2><p>Tap bell for notifications</p></div>';}
+ if(!html && currentTab!='profile') html=`<p style="text-align:center;color:white;margin-top:20px">${currentTab=='saved'?'No saved papers yet 💾<br>Save from Home':'No downloads yet ⬇️<br>Download from Home'}</p>`;
+ document.getElementById('list').innerHTML=html;
+ updateCounts();
+}
+function openTab(tab){
+ currentTab=tab;
+ document.querySelectorAll('.nav span').forEach(s=>s.classList.remove('active-nav'));
+ document.getElementById('nav-'+(tab=='home'?'home':tab=='saved'?'saved':tab=='downloads'?'dl':'profile')).classList.add('active-nav');
+ if(tab=='profile'){showModal('profileModal');}
+ render();
+}
+function showModal(id){document.getElementById(id).style.display='flex';}
+function hideModal(id){document.getElementById(id).style.display='none';}
 </script>
-<script>
-if('serviceWorker' in navigator){navigator.serviceWorker.register('sw.js');}
-</script>
+<script>if('serviceWorker' in navigator){navigator.serviceWorker.register('sw.js');}</script>
 </body>
 </html>
