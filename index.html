@@ -1,40 +1,73 @@
+<!DOCTYPE html>
+<html>
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>UgCampus</title>
+<title>UgCampus Pastpapers 🇺🇬</title>
 <link rel="manifest" href="manifest.json">
-<meta name="theme-color" content="#0f172a">
+<meta name="theme-color" content="#9333ea">
 <style>
-*{box-sizing:border-box;font-family:sans-serif}
-body{background:#f4f7fa;padding:12px}
-.header{background:#0f172a;color:#fff;padding:12px;border-radius:12px}
-.search input{width:100%;padding:14px;border-radius:10px;border:1px solid #ccc}
-.card{background:#fff;border-radius:12px;padding:12px;margin:10px 0;box-shadow:0 2px 8px rgba(0,0,0,0.1)}
-.tag{background:#e0f2fe;color:#0369a1;padding:4px 8px;border-radius:20px;font-size:12px}
-.btn{width:100%;padding:12px;background:#0f172a;color:#fff;border:none;border-radius:8px;margin-top:8px}
+*{box-sizing:border-box;font-family:'Segoe UI',sans-serif;margin:0;padding:0}
+body{background:linear-gradient(135deg,#9333ea,#f97316,#facc15);min-height:100vh;padding:0}
+.header{background:linear-gradient(90deg,#7e22ce 0%,#ec4899 50%,#f97316 100%);padding:16px;display:flex;align-items:center;justify-content:space-between;color:#fff;position:sticky;top:0;z-index:10}
+.header h2{font-size:18px;font-weight:800}
+.search-wrap{padding:14px}
+.search input{width:100%;padding:14px 16px 14px 42px;border-radius:16px;border:none;box-shadow:0 4px 15px rgba(0,0,0,0.2);font-size:15px;outline:none}
+.search{position:relative}
+.search::before{content:'🔍';position:absolute;left:14px;top:50%;transform:translateY(-50%);font-size:18px;z-index:1}
+.filters{display:flex;gap:8px;padding:0 14px;overflow-x:auto}
+.filters button{padding:8px 16px;border-radius:20px;border:none;font-weight:700;font-size:13px;cursor:pointer;white-space:nowrap}
+.active{background:#7e22ce;color:#fff}
+.inactive{background:rgba(255,255,255,0.8);color:#7e22ce}
+#list{padding:14px;padding-bottom:90px}
+.card{border-radius:18px;padding:14px;margin-bottom:12px;box-shadow:0 4px 15px rgba(0,0,0,0.15)}
+.card:nth-child(3n+1){background:#fbcfe8}
+.card:nth-child(3n+2){background:#bfdbfe}
+.card:nth-child(3n+3){background:#fde68a}
+.tag{font-size:11px;font-weight:800;opacity:0.7}
+.card h3{font-size:16px;margin:6px 0;font-weight:800;color:#1e1b4b}
+.card p{font-size:13px;color:#4b5563}
+.btn{margin-top:10px;padding:8px 14px;background:#fff;border:none;border-radius:10px;font-weight:800;box-shadow:0 2px 6px rgba(0,0,0,0.15);cursor:pointer}
+.nav{position:fixed;bottom:12px;left:12px;right:12px;background:linear-gradient(90deg,#ec4899,#f97316);border-radius:22px;display:flex;justify-content:space-around;padding:12px;color:#fff;font-size:12px;font-weight:700}
 </style>
 </head>
 <body>
-<div class="header"><h2>UgCampus PastPapers</h2></div>
-<div class="search"><input id="q" placeholder="Search KIU, MUK, UCU..." oninput="render()"></div>
+<div class="header">
+<h2>✨ UgCampus Pastpapers 🇺🇬</h2>
+<div style="display:flex;gap:12px;font-size:20px"><span>🔔</span><span>👤</span></div>
+</div>
+<div class="search-wrap">
+<div class="search"><input id="q" placeholder="Search courses, papers, years..." oninput="render()"></div>
+</div>
+<div class="filters">
+<button class="active" onclick="filterUni('')">All</button>
+<button class="inactive" onclick="filterUni('KIU')">💜 KIU</button>
+<button class="inactive" onclick="filterUni('MUK')">🔥 MUK</button>
+<button class="inactive" onclick="filterUni('UCU')">✨ UCU</button>
+</div>
 <div id="list"></div>
+<div class="nav"><span>🏠 Home</span><span>📚 Saved</span><span>⬇️ Downloads</span><span>👤 Profile</span></div>
+
 <script>
-let papers = [];
-fetch('papers.json').then(r=>r.json()).then(data=>{papers=data;render();});
+let papers=[];let currentFilter='';
+fetch('papers.json').then(r=>r.json()).then(d=>{papers=d;render();});
+function filterUni(u){currentFilter=u;render();}
 function render(){
   let q=document.getElementById('q').value.toLowerCase();
   let html='';
-  papers.filter(p=>JSON.stringify(p).toLowerCase().includes(q)).forEach(p=>{
-    html+=`<div class="card"><span class="tag">${p.uni} - ${p.year}</span><h3>${p.course}</h3><p>${p.subject}</p><a href="${p.link}" target="_blank"><button class="btn">Download PDF</button></a></div>`;
+  papers.filter(p=>{
+    let matchQ=JSON.stringify(p).toLowerCase().includes(q);
+    let matchF=currentFilter? p.uni==currentFilter : true;
+    return matchQ && matchF;
+  }).forEach(p=>{
+    html+=`<div class="card"><div class="tag">${p.uni} • ${p.year} • ${p.questions||'25'} Questions</div><h3>${p.course}: ${p.subject}</h3><p>${p.year} • Past Paper</p><a href="${p.link}" target="_blank"><button class="btn">📄 PDF</button></a></div>`;
   });
-  if(!html) html='<p style="text-align:center">No papers found</p>';
+  if(!html) html='<p style="text-align:center;color:white;margin-top:20px">No papers found 😔</p>';
   document.getElementById('list').innerHTML=html;
 }
 </script>
 <script>
-if('serviceWorker' in navigator){
-  navigator.serviceWorker.register('sw.js');
-}
+if('serviceWorker' in navigator){navigator.serviceWorker.register('sw.js');}
 </script>
 </body>
 </html>
