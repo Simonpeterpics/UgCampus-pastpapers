@@ -1,11 +1,10 @@
 {
-  "name": "UgCampus Pastpapers",
+  "name": "UgCampus Pastpapers 🇺🇬",
   "short_name": "UgCampus",
-  "description": "Download Ugandan University Past Papers",
-  "start_url": "/UgCampus-pastpapers/",
+  "start_url": ".",
   "display": "standalone",
-  "background_color": "#0f172a",
-  "theme_color": "#0f172a",
+  "background_color": "#9333ea",
+  "theme_color": "#9333ea",
   "icons": [
     {
       "src": "https://cdn-icons-png.flaticon.com/512/2232/2232688.png",
