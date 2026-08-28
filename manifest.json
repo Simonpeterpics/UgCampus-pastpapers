@@ -2,7 +2,7 @@
   "name": "UgCampus Pastpapers 🇺🇬",
   "short_name": "UgCampus",
   "start_url": ".",
-  "display": "standalone",
+  "display": "browser",
   "background_color": "#9333ea",
   "theme_color": "#9333ea",
   "icons": [
