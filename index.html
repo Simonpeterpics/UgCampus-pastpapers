@@ -1,40 +1,40 @@
-<!DOCTYPE html>
-<html>
-<head><link rel="manifest" href="manifest.json">
-<meta name="theme-color" content="#0f172a">
+<head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>UgCampus</title>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#0f172a">
 <style>
-*{box-sizing:border-box;font-family:sans-serif;margin:0;padding:0}
+*{box-sizing:border-box;font-family:sans-serif}
 body{background:#f4f7fa;padding:12px}
-.header{background:#0f172a;color:#fff;padding:16px;border-radius:12px;text-align:center}
-.search input{width:100%;padding:14px;border-radius:10px;border:1px solid #ccc;margin:14px 0;font-size:16px}
-.card{background:#fff;border-radius:12px;padding:14px;margin-bottom:10px;box-shadow:0 2px 6px rgba(0,0,0,.1)}
-.tag{background:#e0f2fe;color:#0369a1;font-size:11px;padding:4px 8px;border-radius:20px}
-.btn{width:100%;padding:12px;background:#2563eb;color:#fff;border:none;border-radius:10px;margin-top:10px;font-weight:bold}
+.header{background:#0f172a;color:#fff;padding:12px;border-radius:12px}
+.search input{width:100%;padding:14px;border-radius:10px;border:1px solid #ccc}
+.card{background:#fff;border-radius:12px;padding:12px;margin:10px 0;box-shadow:0 2px 8px rgba(0,0,0,0.1)}
+.tag{background:#e0f2fe;color:#0369a1;padding:4px 8px;border-radius:20px;font-size:12px}
+.btn{width:100%;padding:12px;background:#0f172a;color:#fff;border:none;border-radius:8px;margin-top:8px}
 </style>
 </head>
 <body>
-<div class="header"><h2>UgCampus PastPapers 🇺🇬</h2><small>KIU • MUK • MUBS</small></div>
-<div class="search"><input id="q" placeholder="Search..." oninput="render()"></div>
+<div class="header"><h2>UgCampus PastPapers</h2></div>
+<div class="search"><input id="q" placeholder="Search KIU, MUK, UCU..." oninput="render()"></div>
 <div id="list"></div>
 <script>
-let papers = [
-{"uni":"KIU","course":"Introduction to mechanics","subject":"Mathematics","year":"2026","link":"https://drive.google.com/test.pdf","price":"0"}
-];
-// try load from json too
-fetch('papers.json').then(r=>r.json()).then(j=>{if(j.length>0)papers=j; render();}).catch(()=>{});
+let papers = [];
+fetch('papers.json').then(r=>r.json()).then(data=>{papers=data;render();});
 function render(){
- let q=document.getElementById('q').value.toLowerCase();
- let html='';
- papers.filter(p=>JSON.stringify(p).toLowerCase().includes(q)).forEach(p=>{
-  html+=`<div class="card"><span class="tag">${p.uni}</span> <span class="tag">${p.year}</span><h3 style="margin:8px 0">${p.subject} - ${p.course}</h3><button class="btn" onclick="window.open('${p.link}','_blank')">📄 Download PDF</button></div>`;
- });
- if(!html) html='<p style="text-align:center">No papers found</p>';
- document.getElementById('list').innerHTML=html;
+  let q=document.getElementById('q').value.toLowerCase();
+  let html='';
+  papers.filter(p=>JSON.stringify(p).toLowerCase().includes(q)).forEach(p=>{
+    html+=`<div class="card"><span class="tag">${p.uni} - ${p.year}</span><h3>${p.course}</h3><p>${p.subject}</p><a href="${p.link}" target="_blank"><button class="btn">Download PDF</button></a></div>`;
+  });
+  if(!html) html='<p style="text-align:center">No papers found</p>';
+  document.getElementById('list').innerHTML=html;
 }
-render();
+</script>
+<script>
+if('serviceWorker' in navigator){
+  navigator.serviceWorker.register('sw.js');
+}
 </script>
 </body>
 </html>
