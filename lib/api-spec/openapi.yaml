@@ -10,6 +10,12 @@ servers:
 tags:
   - name: health
     description: Health operations
+  - name: papers
+    description: Past paper discovery and access
+  - name: uploads
+    description: Student paper uploads
+  - name: dashboard
+    description: Admin dashboard metrics
 paths:
   /healthz:
     get:
@@ -24,6 +30,124 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/HealthStatus"
+  /papers:
+    get:
+      operationId: listPapers
+      tags: [papers]
+      summary: List past papers
+      parameters:
+        - name: search
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: university
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: faculty
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: year
+          in: query
+          required: false
+          schema:
+            type: number
+        - name: trending
+          in: query
+          required: false
+          schema:
+            type: boolean
+      responses:
+        "200":
+          description: Matching papers
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Paper"
+  /papers/{id}:
+    get:
+      operationId: getPaper
+      tags: [papers]
+      summary: Get a paper
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Paper details
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Paper"
+        "404":
+          description: Paper not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+  /papers/{id}/unlock:
+    post:
+      operationId: unlockPaper
+      tags: [papers]
+      summary: Unlock a paper with simulated payment or an ad
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UnlockInput"
+      responses:
+        "200":
+          description: Unlock result
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UnlockResult"
+  /uploads:
+    post:
+      operationId: createUpload
+      tags: [uploads]
+      summary: Record a student paper upload
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UploadInput"
+      responses:
+        "201":
+          description: Upload recorded
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UploadResult"
+  /dashboard/summary:
+    get:
+      operationId: getDashboardSummary
+      tags: [dashboard]
+      summary: Get admin dashboard summary
+      responses:
+        "200":
+          description: Dashboard metrics
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DashboardSummary"
 components:
   schemas:
     HealthStatus:
@@ -33,4 +157,132 @@ components:
           type: string
       required:
         - status
+    Paper:
+      type: object
+      properties:
+        id:
+          type: string
+        courseCode:
+          type: string
+        courseName:
+          type: string
+        faculty:
+          type: string
+        university:
+          type: string
+        year:
+          type: number
+        downloads:
+          type: number
+        priceUgx:
+          type: number
+        previewLabel:
+          type: string
+        accent:
+          type: string
+        isTrending:
+          type: boolean
+        pdfUrl:
+          type: ["string", "null"]
+      required:
+        - id
+        - courseCode
+        - courseName
+        - faculty
+        - university
+        - year
+        - downloads
+        - priceUgx
+        - previewLabel
+        - accent
+        - isTrending
+        - pdfUrl
+    UnlockInput:
+      type: object
+      properties:
+        method:
+          type: string
+          enum: [momo, airtel, ad]
+      required:
+        - method
+    UnlockResult:
+      type: object
+      properties:
+        unlocked:
+          type: boolean
+        downloadUrl:
+          type: ["string", "null"]
+        message:
+          type: string
+        creditsRemaining:
+          type: number
+      required:
+        - unlocked
+        - downloadUrl
+        - message
+        - creditsRemaining
+    UploadInput:
+      type: object
+      properties:
+        courseCode:
+          type: string
+        courseName:
+          type: string
+        university:
+          type: string
+        faculty:
+          type: string
+        year:
+          type: number
+        fileName:
+          type: string
+      required:
+        - courseCode
+        - courseName
+        - university
+        - faculty
+        - year
+        - fileName
+    UploadResult:
+      type: object
+      properties:
+        id:
+          type: string
+        creditsEarned:
+          type: number
+        status:
+          type: string
+      required:
+        - id
+        - creditsEarned
+        - status
+    DashboardSummary:
+      type: object
+      properties:
+        totalPapers:
+          type: number
+        totalDownloads:
+          type: number
+        paidUnlocks:
+          type: number
+        totalEarningsUgx:
+          type: number
+        pendingUploads:
+          type: number
+        topUniversity:
+          type: string
+      required:
+        - totalPapers
+        - totalDownloads
+        - paidUnlocks
+        - totalEarningsUgx
+        - pendingUploads
+        - topUniversity
+    Error:
+      type: object
+      properties:
+        error:
+          type: string
+      required:
+        - error
 

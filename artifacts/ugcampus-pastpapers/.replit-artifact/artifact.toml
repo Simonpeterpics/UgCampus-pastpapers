@@ -1,0 +1,28 @@
+kind = "web"
+previewPath = "/"
+title = "UgCampus PastPapers"
+description = "A mobile-first past papers library for university students in Uganda, with fast search, paper previews, simulated unlocks, uploads, credits, and an admin earnings dashboard."
+version = "1.0.0"
+id = "artifacts/ugcampus-pastpapers"
+router = "path"
+
+[[services]]
+name = "web"
+paths = [ "/" ]
+localPort = 20845
+
+[services.development]
+run = "pnpm --filter @workspace/ugcampus-pastpapers run dev"
+
+[services.production]
+build = [ "pnpm", "--filter", "@workspace/ugcampus-pastpapers", "run", "build" ]
+serve = "static"
+publicDir = "artifacts/ugcampus-pastpapers/dist/public"
+
+[[services.production.rewrites]]
+from = "/*"
+to = "/index.html"
+
+[services.env]
+PORT = "20845"
+BASE_PATH = "/"
