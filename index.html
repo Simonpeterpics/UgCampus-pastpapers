@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>UgCampus - Past Papers</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:sans-serif}
+body{background:#f4f7fa;padding:12px}
+.header{background:#0f172a;color:white;padding:16px;border-radius:12px;text-align:center}
+.header h1{font-size:22px}
+.header p{opacity:.7;font-size:13px;margin-top:4px}
+.search{margin:14px 0;display:flex;gap:8px}
+.search input{flex:1;padding:14px;border-radius:10px;border:1px solid #ccc;font-size:16px}
+.card{background:white;border-radius:12px;padding:14px;margin-bottom:10px;box-shadow:0 2px 8px rgba(0,0,0,.06)}
+.tag{display:inline-block;font-size:11px;padding:4px 8px;border-radius:20px;background:#e0f2fe;color:#0369a1;margin-right:4px}
+.price{float:right;font-weight:bold;color:#16a34a}
+.btn{width:100%;margin-top:10px;padding:12px;border:none;border-radius:10px;background:#2563eb;color:white;font-weight:bold;font-size:15px}
+.btn.paid{background:#f59e0b}
+.footer{text-align:center;padding:20px;font-size:12px;color:#888}
+</style>
+</head>
+<body>
+<div class="header">
+<h1>UgCampus PastPapers 🇺🇬</h1>
+<p>KIU • MUK • MUBS • All Universities</p>
+</div>
+<div class="search">
+<input id="q" placeholder="Search course, subject, year... (e.g. BBA)" oninput="render()">
+</div>
+<div id="list">Loading papers...</div>
+<div class="footer">Built by Simon Peter • Kampala</div>
+<script>
+let papers=[];
+fetch('papers.json').then(r=>r.json()).then(d=>{papers=d;render()}).catch(()=>{document.getElementById('list').innerHTML='No papers.json yet. Upload from Admin.'});
+
+function render(){
+ const query=document.getElementById('q').value.toLowerCase();
+ const list=document.getElementById('list');
+ let filtered=papers.filter(p=> (p.course+' '+p.subject+' '+p.year+' '+p.university).toLowerCase().includes(query));
+ if(!filtered.length){list.innerHTML='<p style=text-align:center;padding:20px>No papers found</p>';return}
+ list.innerHTML=filtered.map(p=>`
+  <div class="card">
+   <span class="tag">${p.university||'UG'}</span>
+   <span class="tag">${p.course}</span>
+   <span class="tag">${p.year}</span>
+   <span class="price">${p.type==='paid'? 'UGX '+(p.price||'1000') : 'FREE'}</span>
+   <h3 style="margin:8px 0">${p.subject}</h3>
+   <p style="font-size:12px;color:#666">${p.course} • ${p.year}</p>
+   <button class="btn ${p.type==='paid'?'paid':''}" onclick="openPaper('${p.link}',
