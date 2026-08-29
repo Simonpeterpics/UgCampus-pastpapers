@@ -1,131 +1,80 @@
- <!DOCTYPE html>
-<html lang="en">
+<!DOCTYPE html>
+<html>
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>UgCampus - Past Papers</title>
-  <style>
-    *{margin:0;padding:0;box-sizing:border-box;font-family:Arial,sans-serif}
-    body{background:#f5f7fb;color:#222}
-    header{background:#0a1931;color:#fff;padding:15px;text-align:center;position:sticky;top:0;z-index:10}
-    .hero{padding:30px 20px;text-align:center;background:white;margin:15px;border-radius:15px;box-shadow:0 4px 10px rgba(0,0,0,0.05)}
-    .btn{padding:12px 20px;border:none;border-radius:30px;font-weight:bold;cursor:pointer;margin:5px}
-    .btn-primary{background:#0a1931;color:white}
-    .btn-share{background:#25D366;color:white}
-    .search-box{width:90%;max-width:500px;margin:20px auto;display:flex;background:white;border-radius:30px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,0.1)}
-    .search-box input{flex:1;padding:15px;border:none;outline:none}
-    .search-box button{background:#0a1931;color:white;border:none;padding:0 20px}
-    .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:15px;padding:20px}
-    .card{background:white;padding:20px;border-radius:15px;text-align:center;box-shadow:0 2px 8px rgba(0,0,0,0.05)}
-    .modal{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.6);justify-content:center;align-items:center;z-index:100}
-    .modal-box{background:white;padding:25px;border-radius:15px;width:90%;max-width:400px}
-    .modal-box input{width:100%;padding:12px;margin:10px 0;border:1px solid #ddd;border-radius:10px}
-    footer{text-align:center;padding:20px;color:#777}
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>UgCampus - Past Papers</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:Arial}
+body{background:#f5f7fb}
+header{background:linear-gradient(90deg,#ff4b2b,#ff8a00);color:#fff;padding:15px;text-align:center}
+.ad-box{background:#fff;border:2px dashed #ff8a00;margin:15px;padding:12px;border-radius:12px;text-align:center}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;padding:15px}
+.card{background:#fff;padding:20px;border-radius:12px;text-align:center;box-shadow:0 2px 5px rgba(0,0,0,0.1)}
+.share-float{position:fixed;bottom:90px;right:20px;background:#25D366;color:#fff;width:60px;height:60px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:28px;box-shadow:0 4px 15px rgba(0,0,0,0.3);z-index:99;border:none;cursor:pointer}
+</style>
+
+<!-- 100% FREE EARNING CODE - PASTE YOUR MONETAG ID HERE LATER (FREE) -->
+<!-- Get free ID from monetag.com - No money needed! -->
+<script>
+// FREE - When you get ID, replace this whole script with Monetag code
+// Example Monetag code will be like:
+// <script src="https://alwingulla.com/88/tag.min.js" data-zone="YOUR_ZONE_ID" async data-cfasync="false"><\/script>
+</script>
+
 </head>
 <body>
 
 <header>
-  <h1>🎓 UgCampus Pastpapers</h1>
-  <p>Makerere Past Papers for All Courses</p>
+<h1>🎓 UgCampus Pastpapers</h1>
+<p>All MUK Pastpapers in one place</p>
 </header>
 
-<div class="hero">
-  <h2>Welcome to UgCampus! 📚</h2>
-  <p style="margin:10px 0;color:#555">Get all past papers instantly. Search, Download, Pass!</p>
-  <button class="btn btn-primary" onclick="openLogin()">🔐 Login / Sign Up</button>
-  <button class="btn btn-share" onclick="shareApp()">📤 Share App</button>
-  <p id="welcomeMsg" style="margin-top:15px;font-weight:bold;color:#0a1931"></p>
+<!-- AD 1 - TOP - FREE MONEY SPOT -->
+<div class="ad-box" id="ad-top">
+<p>📢 <b>ADVERTISE HERE</b></p>
+<p style="font-size:13px">Reach 5000+ MUK Students Daily!</p>
+<p style="font-size:12px;color:green;font-weight:bold">Call/WhatsApp: 0705413433 - Only 50k/week!</p>
+<!-- PASTE MONETAG CODE HERE LATER -->
 </div>
 
-<div class="search-box">
-  <input type="text" id="searchInput" placeholder="Search course, e.g. BIT 1101, BCOM...">
-  <button onclick="searchPapers()">Search</button>
+<div style="padding:15px;text-align:center">
+<input type="text" placeholder="Search course e.g BIT 1101" style="width:90%;padding:12px;border-radius:25px;border:1px solid #ddd">
 </div>
 
-<div class="grid" id="papersGrid">
-  <div class="card">📄 BIT 1101</div>
-  <div class="card">📄 BCOM 1201</div>
-  <div class="card">📄 CSC 1100</div>
-  <div class="card">📄 MGT 1101</div>
+<div class="grid">
+<div class="card">📄 BIT 1101</div>
+<div class="card">📄 BCOM 1201</div>
+<div class="card">📄 CSC 1100</div>
+<div class="card">📄 MGT 1101</div>
 </div>
 
-<!-- LOGIN MODAL FOR NEW USERS -->
-<div class="modal" id="loginModal">
-  <div class="modal-box">
-    <h3>Welcome New User! 👋</h3>
-    <p style="font-size:14px;color:#666">Login to save papers & get updates</p>
-    <input type="text" id="userName" placeholder="Your Name">
-    <input type="email" id="userEmail" placeholder="Email (or phone)">
-    <input type="password" placeholder="Create Password (optional)">
-    <button class="btn btn-primary" style="width:100%" onclick="doLogin()">Continue to App →</button>
-    <button class="btn" style="width:100%;background:#eee" onclick="closeLogin()">Skip for Now</button>
-    <p style="font-size:11px;text-align:center;margin-top:10px;color:#999">By continuing you agree to share app with friends</p>
-  </div>
+<!-- AD 2 - MIDDLE - FREE MONEY SPOT -->
+<div class="ad-box">
+<p>🔥 <b>Hostel Vacancies? Stationery Shop?</b></p>
+<p style="font-size:13px">Advertise to students who need you!</p>
+<a href="https://wa.me/256705413433?text=Hi%20I%20want%20to%20advertise%20on%20UgCampus" style="background:#25D366;color:white;padding:8px 15px;border-radius:20px;text-decoration:none;display:inline-block;margin-top:5px">Advertise on WhatsApp</a>
 </div>
 
-<footer>
-  <p>Share UgCampus with friends!</p>
-  <button class="btn btn-share" onclick="shareApp()">📤 Share Now - https://ugcompus-pastpapers.netlify.app/</button>
-  <p style="margin-top:15px">© 2026 UgCampus</p>
-</footer>
+<!-- AD 3 - BOTTOM - FREE MONEY SPOT -->
+<div class="ad-box">
+<p>💰 <b>Make Money With Your Notes?</b></p>
+<p style="font-size:12px">Upload pastpapers & earn - Coming Soon</p>
+</div>
+
+<button class="share-float" onclick="shareApp()">📤</button>
 
 <script>
-  // CONFIG - YOUR NEW CLEAN LINK - NO 404!
-  const APP_URL = "https://ugcompus-pastpapers.netlify.app/";
-  const APP_TITLE = "UgCampus - Past Papers";
-
-  // Show welcome if returning user
-  const savedUser = localStorage.getItem("ug_user");
-  if(savedUser){
-    document.getElementById("welcomeMsg").innerText = "Welcome back, " + savedUser + " ✅";
-  } else {
-    // Show login for new users after 2 secs
-    setTimeout(()=>{ openLogin(); }, 2000);
-  }
-
-  function openLogin(){ document.getElementById("loginModal").style.display="flex"; }
-  function closeLogin(){ document.getElementById("loginModal").style.display="none"; }
-
-  function doLogin(){
-    const name = document.getElementById("userName").value || "Friend";
-    const email = document.getElementById("userEmail").value;
-    if(!name){ alert("Enter name"); return; }
-    localStorage.setItem("ug_user", name);
-    localStorage.setItem("ug_email", email);
-    document.getElementById("welcomeMsg").innerText = "Welcome, " + name + " ✅ Start searching!";
-    closeLogin();
-    // Auto prompt share after login for new user
-    setTimeout(()=>{ if(confirm("Welcome "+name+"! Want to share UgCampus with classmates?")){ shareApp(); } }, 1000);
-  }
-
-  function searchPapers(){
-    const q = document.getElementById("searchInput").value.toLowerCase();
-    alert("Searching for: " + q + "\n(Connect your search logic here Boss)");
-  }
-
-  // FINAL SHARE BUTTON - NO GITHUB.IO - ONLY NETLIFY!
-  function shareApp(){
-    const shareData = {
-      title: APP_TITLE,
-      text: "Get all Makerere Past Papers here! I use UgCampus - it's free! 📚🎓\n",
-      url: APP_URL
-    };
-
-    if(navigator.share){
-      navigator.share(shareData).then(()=>{ console.log("Shared!"); }).catch(console.error);
-    } else {
-      // Fallback for WhatsApp / Copy
-      const waText = encodeURIComponent(shareData.text + " " + shareData.url);
-      if(confirm("Share on WhatsApp?")){
-        window.open("https://wa.me/?text=" + waText, "_blank");
-      } else {
-        navigator.clipboard.writeText(APP_URL);
-        alert("Link Copied! ✅\n" + APP_URL + "\nPaste to share!");
-      }
-    }
-  }
+const APP_URL="https://ugcompus-pastpapers.netlify.app/";
+function shareApp(){
+ if(navigator.share){
+  navigator.share({title:'UgCampus',text:'Get MUK pastpapers FREE! ',url:APP_URL});
+ }else{
+  window.open("https://wa.me/?text="+encodeURIComponent("Get MUK pastpapers FREE! "+APP_URL),"_blank");
+ }
+}
 </script>
 
 </body>
-</html> 
+</html>
+
