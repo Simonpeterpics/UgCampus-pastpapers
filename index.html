@@ -1,9 +1,64 @@
 <!DOCTYPE html>
-<html><head><meta name="viewport" content="width=device-width,initial-scale=1"><title>UGCompus - CLEAN</title>
-<style>body{font-family:Arial;background:#f0f4f8;padding:20px}.card{background:white;padding:20px;border-radius:10px;margin:10px 0}</style>
-</head><body>
-<h1>UGCompus Past Papers - CLEAN MODE</h1>
-<div class="card"><h3>DTME 211 Thermodynamics</h3><a href="https://drive.google.com/file/d/1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs74/preview" target="_blank">VIEW PAPER - NO VPN</a></div>
-<div class="card"><h3>DTME 212 Fluid Mechanics</h3><a href="https://drive.google.com/file/d/1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs74/preview" target="_blank">VIEW PAPER - NO VPN</a></div>
-<p>If this page still shows VPN, then problem is NOT code, its Netlify cache.</p>
-</body></html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>UGCompus PastPapers - Makerere DTME</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}body{font-family:Arial;background:#f0f4f8}
+header{background:#0f172a;color:#fff;padding:15px;text-align:center;position:sticky;top:0;z-index:10}
+header h1{font-size:18px}header p{font-size:12px;color:#94a3b8}
+.search{padding:15px;max-width:800px;margin:auto}input{width:100%;padding:12px;border-radius:10px;border:1px solid #ddd}
+.grid{display:grid;grid-template-columns:1fr;gap:15px;padding:15px;max-width:800px;margin:auto}
+.card{background:#fff;padding:15px;border-radius:12px;box-shadow:0 2px 8px rgba(0,0,0,0.1)}
+.card h3{font-size:16px;margin-bottom:5px;color:#0f172a}.card p{font-size:12px;color:#64748b;margin-bottom:12px}
+.row{display:flex;gap:10px}.btn{flex:1;padding:10px;border-radius:8px;text-align:center;text-decoration:none;font-weight:bold;font-size:14px;cursor:pointer;border:none}
+.view{background:#e0f2fe;color:#0284c7}.down{background:#dcfce7;color:#16a34a}
+.ad-top{background:#fff;border:2px dashed #cbd5e1;padding:15px;text-align:center;margin:15px auto;max-width:800px;border-radius:12px;min-height:90px}
+</style>
+</head>
+<body>
+<header><h1>🎓 UGCompus PastPapers</h1><p>Makerere University DTME - Year 1 to Year 4</p></header>
+
+<!-- SAFE AD TOP - BANNER ONLY - NO VPN -->
+<div class="ad-top" id="adTop">
+<!-- PASTE ADSTERRA BANNER CODE HERE - SAFE -->
+AD - Top Banner Safe
+</div>
+
+<div class="search"><input id="search" placeholder="Search paper... e.g Thermodynamics"></div>
+<div class="grid" id="grid"></div>
+
+<script>
+// YOUR PAPERS DATA - ADD ALL YOUR PAPERS HERE
+let papers = [
+{l:"https://drive.google.com/file/d/1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs74/view",t:"DTME 211 - Thermodynamics I",y:"Y2 S1"},
+{l:"https://drive.google.com/file/d/1a2b3c4d5e6f7g8h9i0j/view",t:"DTME 212 - Fluid Mechanics",y:"Y2 S1"},
+{l:"https://drive.google.com/file/d/1ZxYwVuTsRqPoNmLkJiHgFdEsA/view",t:"DTME 213 - Engineering Drawing",y:"Y2 S1"},
+{l:"https://drive.google.com/file/d/1Test123456789/view",t:"DTME 221 - Strength of Materials",y:"Y2 S2"}
+];
+localStorage.setItem('ug', JSON.stringify(papers));
+
+function render(list){
+ let g=document.getElementById('grid'); g.innerHTML="";
+ list.forEach((p,i)=>{
+  g.innerHTML+=`<div class="card"><h3>${p.t}</h3><p>${p.y} | Makerere University</p><div class="row"><a class="btn view" onclick="openPaper(${i})">📖 OPEN</a><a class="btn down" onclick="goAd(${i})">⬇️ DOWNLOAD</a></div></div>`;
+ });
+}
+function openPaper(i){
+ let link=papers[i].l; localStorage.setItem('tempLink',link);
+ let fileId=link.split('/d/')[1].split('/')[0];
+ window.open(`https://drive.google.com/file/d/${fileId}/preview`,'_blank');
+}
+function goAd(i){
+ localStorage.setItem('tempLink',papers[i].l);
+ location.href=`ad.html?id=${i}`;
+}
+document.getElementById('search').addEventListener('input',e=>{
+ let q=e.target.value.toLowerCase();
+ render(papers.filter(p=>p.t.toLowerCase().includes(q)));
+});
+render(papers);
+</script>
+</body>
+</html>
