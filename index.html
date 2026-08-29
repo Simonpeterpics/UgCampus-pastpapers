@@ -16,53 +16,27 @@ header{background:linear-gradient(90deg,#ff4b2b,#ff8a00);color:#fff;padding:15px
 </style>
 </head>
 <body>
-
 <header>
 <h1>🎓 UgCampus Pastpapers</h1>
 <p>All MUK Pastpapers in one place</p>
 </header>
-
-<div class="ad-box" id="ad-top">
+<div class="ad-box">
 <p>📢 <b>ADVERTISE HERE</b></p>
 <p style="font-size:13px">Reach 5000+ MUK Students Daily!</p>
-<p style="font-size:12px;color:green;font-weight:bold">Call/WhatsApp: 0705413433 - Only 50k/week!</p>
+<p style="font-size:12px;color:green;font-weight:bold">Call/WhatsApp: 0705413433</p>
 </div>
-
 <div style="padding:15px;text-align:center">
 <input type="text" placeholder="Search course e.g BIT 1101" style="width:90%;padding:12px;border-radius:25px;border:1px solid #ddd">
 </div>
-
 <div class="grid">
 <div class="card">📄 BIT 1101</div>
 <div class="card">📄 BCOM 1201</div>
 <div class="card">📄 CSC 1100</div>
 <div class="card">📄 MGT 1101</div>
 </div>
-
 <div class="ad-box">
-<p>🔥 <b>Hostel Vacancies? Stationery Shop?</b></p>
-<p style="font-size:13px">Advertise to students who need you!</p>
-<a href="https://wa.me/256705413433?text=Hi%20I%20want%20to%20advertise%20on%20UgCampus" style="background:#25D366;color:white;padding:8px 15px;border-radius:20px;text-decoration:none;display:inline-block;margin-top:5px">Advertise on WhatsApp</a>
+<p>🔥 <b>Hostel Vacancies?</b></p>
+<a href="https://wa.me/256705413433" style="background:#25D366;color:white;padding:8px 15px;border-radius:20px;text-decoration:none;display:inline-block;margin-top:5px">Advertise on WhatsApp</a>
 </div>
-
-<div class="ad-box">
-<p>💰 <b>Make Money With Your Notes?</b></p>
-<p style="font-size:12px">Upload pastpapers & earn - Coming Soon</p>
-</div>
-
-<button class="share-float" onclick="shareApp()">📤</button>
-
-<script>
-const APP_URL="https://ugcompus-pastpapers.netlify.app/";
-function shareApp(){
- if(navigator.share){
-  navigator.share({title:'UgCampus',text:'Get MUK pastpapers FREE! ',url:APP_URL});
- }else{
-  window.open("https://wa.me/?text="+encodeURIComponent("Get MUK pastpapers FREE! "+APP_URL),"_blank");
- }
-}
-</script>
-
 </body>
 </html>
-  
