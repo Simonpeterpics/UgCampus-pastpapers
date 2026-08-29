@@ -1,90 +1,12 @@
 <!DOCTYPE html>
-<html>
-<head>
-<title>UGCAMPUS ADMIN - Owner Only</title>
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<style>
-body{font-family:Arial;background:#0f172a;color:white;padding:20px}
-.login{max-width:400px;margin:100px auto;background:#1e293b;padding:30px;border-radius:15px;text-align:center}
-input,select{width:100%;padding:12px;margin:8px 0;border-radius:8px;border:none}
-button{background:#22c55e;color:white;padding:12px 20px;border:none;border-radius:8px;width:100%;font-weight:bold;cursor:pointer;margin-top:10px}
-.paper{background:#1e293b;padding:15px;margin:10px 0;border-radius:10px;display:flex;justify-content:space-between}
-.delete{background:#ef4444;width:auto;padding:5px 15px}
-h2{color:#22c55e}
-</style>
-</head>
-<body>
-
-<div id="loginBox" class="login">
-<h2>🔒 UGCAMPUS ADMIN</h2>
-<p>Owner Only</p>
-<input type="password" id="pass" placeholder="Enter Password">
-<button onclick="login()">LOGIN</button>
-<p id="err" style="color:red"></p>
-</div>
-
-<div id="adminBox" style="display:none;max-width:800px;margin:auto">
-<h2>📚 Manage Past Papers</h2>
-
-<input id="course" placeholder="Course Code e.g CSC1101">
-<input id="title" placeholder="Title e.g Intro to Computer Science">
-<select id="year">
-<option>2024</option><option>2023</option><option>2022</option><option>2021</option><option>2020</option>
-</select>
-<input id="link" placeholder="PDF Link (Google Drive link)">
-
-<button onclick="addPaper()">+ ADD PAPER</button>
-
-<h3 style="margin-top:30px">All Papers (<span id="count">0</span>)</h3>
-<div id="list"></div>
-
-<button style="background:#3b82f6" onclick="saveAndDeploy()">💾 SAVE & UPDATE SITE</button>
-<p id="msg"></p>
-</div>
-
+<html><head><meta name="viewport" content="width=device-width,initial-scale=1"><title>ADMIN</title>
+<style>body{background:#0f172a;color:#fff;font-family:Arial;padding:15px}input,select{width:100%;padding:12px;margin:6px 0;border-radius:8px;border:none;box-sizing:border-box}button{padding:12px;background:#22c55e;border:none;border-radius:8px;color:#fff;font-weight:bold;width:100%;margin-top:8px}.card{background:#1e293b;padding:12px;margin:8px 0;border-radius:10px;display:flex;justify-content:space-between;align-items:center}</style>
+</head><body>
+<div id="a" style="max-width:500px;margin:80px auto;background:#1e293b;padding:25px;border-radius:15px;text-align:center"><h2>UGCAMPUS OWNER</h2><input type="password" id="p" placeholder="Password"><button onclick="if(document.getElementById('p').value=='simon@pics'){document.getElementById('a').style.display='none';document.getElementById('b').style.display='block';load()}else{alert('Wrong! Use kampala123')}">LOGIN</button></div>
+<div id="b" style="display:none;max-width:600px;margin:auto"><h2>📚 Add Paper</h2><input id="c" placeholder="Course e.g CSC1101"><input id="t" placeholder="Name e.g Intro to CS"><select id="y"><option>2024</option><option>2023</option><option>2022</option><option>2021</option></select><input id="l" placeholder="Google Drive PDF Link - VERY IMPORTANT"><button onclick="add()">ADD PAPER NOW</button><h3>Papers: <span id="n">0</span></h3><div id="list"></div></div>
 <script>
-let papers = JSON.parse(localStorage.getItem('ug_papers')||'[]');
-
-function login(){
- if(document.getElementById('pass').value==='ugcampus2024'){
-  document.getElementById('loginBox').style.display='none';
-  document.getElementById('adminBox').style.display='block';
-  show();
- } else {
-  document.getElementById('err').innerText='Wrong password! Try simon@pics';
- }
-}
-
-function show(){
- let html=''; 
- papers.forEach((p,i)=>{
-  html+=`<div class="paper"><div><b>${p.course}</b> - ${p.title} (${p.year})</div><button class="delete" onclick="del(${i})">Delete</button></div>`;
- });
- document.getElementById('list').innerHTML=html;
- document.getElementById('count').innerText=papers.length;
-}
-
-function addPaper(){
- let c=document.getElementById('course').value;
- let t=document.getElementById('title').value;
- let y=document.getElementById('year').value;
- let l=document.getElementById('link').value;
- if(!c||!t||!l) return alert('Fill all fields!');
- papers.push({course:c,title:t,year:y,link:l});
- localStorage.setItem('ug_papers',JSON.stringify(papers));
- show();
- document.getElementById('course').value='';document.getElementById('title').value='';document.getElementById('link').value='';
-}
-
-function del(i){
- if(confirm('Delete this paper?')){ papers.splice(i,1); localStorage.setItem('ug_papers',JSON.stringify(papers)); show(); }
-}
-
-function saveAndDeploy(){
- localStorage.setItem('ug_papers',JSON.stringify(papers));
- document.getElementById('msg').innerText='✅ Saved! Now go to your main site - papers are there! (Saved in browser)';
- alert('Papers saved! But NOTE: This saves on YOUR phone only. For permanent save, copy this code and send to me: '+JSON.stringify(papers).substring(0,100)+'...');
-}
-</script>
-</body>
-</html>
+let data=JSON.parse(localStorage.getItem('ug')||'[]');
+function load(){let h='';data.forEach((x,i)=>{h+=`<div class=card><div><b>${x.c}</b><br>${x.t} ${x.y}</div><button style=background:#ef4444;width:auto onclick=del(${i})>X</button></div>`});document.getElementById('list').innerHTML=h;document.getElementById('n').innerText=data.length}
+function add(){let c=document.getElementById('c').value,t=document.getElementById('t').value,y=document.getElementById('y').value,l=document.getElementById('l').value;if(!c||!t||!l)return alert('Fill all!');data.push({c,t,y,l});localStorage.setItem('ug',JSON.stringify(data));load();document.getElementById('c').value='';document.getElementById('t').value='';document.getElementById('l').value='';alert('Added! Now students will see it on your phone. For ALL phones, screenshot this and send me I will make permanent.')}
+function del(i){data.splice(i,1);localStorage.setItem('ug',JSON.stringify(data));load()}
+</script></body></html>
