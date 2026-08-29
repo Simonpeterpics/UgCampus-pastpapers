@@ -1,85 +1,90 @@
 <!DOCTYPE html>
 <html>
 <head>
+<title>UGCAMPUS ADMIN - Owner Only</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>UgCampus Admin</title>
 <style>
-body{font-family:sans-serif;padding:15px;background:#f5f5f5}
-.card{background:white;padding:15px;border-radius:12px;margin-bottom:15px;box-shadow:0 2px 5px #0001}
-input,select,button{width:100%;padding:12px;margin:6px 0;border-radius:8px;border:1px solid #ddd}
-button{background:#16a34a;color:white;font-weight:bold;border:none}
-button.del{background:#ef4444}
-h2{color:#16a34a}
+body{font-family:Arial;background:#0f172a;color:white;padding:20px}
+.login{max-width:400px;margin:100px auto;background:#1e293b;padding:30px;border-radius:15px;text-align:center}
+input,select{width:100%;padding:12px;margin:8px 0;border-radius:8px;border:none}
+button{background:#22c55e;color:white;padding:12px 20px;border:none;border-radius:8px;width:100%;font-weight:bold;cursor:pointer;margin-top:10px}
+.paper{background:#1e293b;padding:15px;margin:10px 0;border-radius:10px;display:flex;justify-content:space-between}
+.delete{background:#ef4444;width:auto;padding:5px 15px}
+h2{color:#22c55e}
 </style>
 </head>
 <body>
-<h2>🇺🇬 UgCampus Admin Panel</h2>
-<div class="card">
-<h3>Add New Past Paper</h3>
-<select id="uni">
-<option>Makerere University</option>
-<option>Kyambogo University</option>
-<option>MUBS</option>
-<option>KIU</option>
-<option>UCU</option>
-<option>Gulu University</option>
-<option>Busitema</option>
-<option>Other</option>
-</select>
-<input id="course" placeholder="Course e.g. B.Com Year 2">
-<input id="subject" placeholder="Subject e.g. Accounting">
-<input id="year" placeholder="Year e.g. 2023">
-<input id="link" placeholder="Google Drive PDF Link">
-<select id="price">
-<option value="0">FREE</option>
-<option value="5000">5000 UGX - Paid</option>
-</select>
-<button onclick="addPaper()">➕ Add Paper</button>
+
+<div id="loginBox" class="login">
+<h2>🔒 UGCAMPUS ADMIN</h2>
+<p>Owner Only</p>
+<input type="password" id="pass" placeholder="Enter Password">
+<button onclick="login()">LOGIN</button>
+<p id="err" style="color:red"></p>
 </div>
 
-<div class="card">
-<h3>All Papers (<span id="count">0</span>)</h3>
+<div id="adminBox" style="display:none;max-width:800px;margin:auto">
+<h2>📚 Manage Past Papers</h2>
+
+<input id="course" placeholder="Course Code e.g CSC1101">
+<input id="title" placeholder="Title e.g Intro to Computer Science">
+<select id="year">
+<option>2024</option><option>2023</option><option>2022</option><option>2021</option><option>2020</option>
+</select>
+<input id="link" placeholder="PDF Link (Google Drive link)">
+
+<button onclick="addPaper()">+ ADD PAPER</button>
+
+<h3 style="margin-top:30px">All Papers (<span id="count">0</span>)</h3>
 <div id="list"></div>
+
+<button style="background:#3b82f6" onclick="saveAndDeploy()">💾 SAVE & UPDATE SITE</button>
+<p id="msg"></p>
 </div>
 
 <script>
 let papers = JSON.parse(localStorage.getItem('ug_papers')||'[]');
-function save(){localStorage.setItem('ug_papers',JSON.stringify(papers)); render();}
-function addPaper(){
- let p={
-  id:Date.now(),
-  uni:document.getElementById('uni').value,
-  course:document.getElementById('course').value,
-  subject:document.getElementById('subject').value,
-  year:document.getElementById('year').value,
-  link:document.getElementById('link').value,
-  price:document.getElementById('price').value
- };
- if(!p.course||!p.link){alert('Fill course and link!');return;}
- papers.unshift(p); save();
- document.getElementById('course').value='';document.getElementById('link').value='';
- alert('Added!');
+
+function login(){
+ if(document.getElementById('pass').value==='ugcampus2024'){
+  document.getElementById('loginBox').style.display='none';
+  document.getElementById('adminBox').style.display='block';
+  show();
+ } else {
+  document.getElementById('err').innerText='Wrong password! Try simon@pics';
+ }
 }
-function del(id){papers=papers.filter(x=>x.id!=id);save();}
-function render(){
+
+function show(){
+ let html=''; 
+ papers.forEach((p,i)=>{
+  html+=`<div class="paper"><div><b>${p.course}</b> - ${p.title} (${p.year})</div><button class="delete" onclick="del(${i})">Delete</button></div>`;
+ });
+ document.getElementById('list').innerHTML=html;
  document.getElementById('count').innerText=papers.length;
- document.getElementById('list').innerHTML=papers.map(p=>`
-  <div style="border-bottom:1px solid #eee;padding:10px 0">
-  <b>${p.subject} - ${p.course}</b><br>
-  <small>${p.uni} | ${p.year} | ${p.price==0?'FREE':'5000 UGX'}</small><br>
-  <a href="${p.link}" target="_blank">View PDF</a>
-  <button class="del" onclick="del(${p.id})">Delete</button>
-  </div>
- `).join('')||'No papers yet';
- // also create download json
 }
-function downloadJSON(){
- let blob=new Blob([JSON.stringify(papers,null,2)],{type:'application/json'});
- let a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='papers.json';a.click();
+
+function addPaper(){
+ let c=document.getElementById('course').value;
+ let t=document.getElementById('title').value;
+ let y=document.getElementById('year').value;
+ let l=document.getElementById('link').value;
+ if(!c||!t||!l) return alert('Fill all fields!');
+ papers.push({course:c,title:t,year:y,link:l});
+ localStorage.setItem('ug_papers',JSON.stringify(papers));
+ show();
+ document.getElementById('course').value='';document.getElementById('title').value='';document.getElementById('link').value='';
 }
-render();
+
+function del(i){
+ if(confirm('Delete this paper?')){ papers.splice(i,1); localStorage.setItem('ug_papers',JSON.stringify(papers)); show(); }
+}
+
+function saveAndDeploy(){
+ localStorage.setItem('ug_papers',JSON.stringify(papers));
+ document.getElementById('msg').innerText='✅ Saved! Now go to your main site - papers are there! (Saved in browser)';
+ alert('Papers saved! But NOTE: This saves on YOUR phone only. For permanent save, copy this code and send to me: '+JSON.stringify(papers).substring(0,100)+'...');
+}
 </script>
-<button onclick="downloadJSON()" style="background:#2563eb">⬇️ Download papers.json (Upload to GitHub)</button>
-<p><small>After adding papers, tap download then upload papers.json to your GitHub repo. Your app will read it.</small></p>
 </body>
 </html>
