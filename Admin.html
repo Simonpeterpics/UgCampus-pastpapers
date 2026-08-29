@@ -1,22 +1,39 @@
-<!DOCTYPE html><html><head><meta name="viewport" content="width=device-width,initial-scale=1"><title>OWNER - Q + Solutions</title>
-<style>body{background:#0f172a;color:#fff;font-family:Arial;padding:10px}input,select{width:100%;padding:10px;margin:5px 0;border-radius:8px;border:none}button{padding:12px;background:#22c55e;border:none;border-radius:8px;color:#fff;font-weight:bold;width:100%;margin:5px 0}.stat{background:#1e293b;padding:12px;border-radius:10px;display:inline-block;width:30%;text-align:center;margin:3px}.card{background:#1e293b;padding:10px;margin:6px 0;border-radius:8px}</style>
+<!DOCTYPE html><html><head><meta name="viewport" content="width=device-width,initial-scale=1"><title>Owner Panel</title>
+<style>body{background:#0f172a;color:#fff;font-family:Arial;padding:20px}#box{max-width:500px;margin:auto;background:#1e293b;padding:20px;border-radius:12px}input,button{width:100%;padding:12px;margin-top:10px;border-radius:8px;border:none}button{background:#22c55e;color:#fff;font-weight:bold;cursor:pointer}.card{background:#334155;padding:10px;border-radius:8px;margin-top:10px;display:flex;justify-content:space-between}</style>
 </head><body>
-<div id="a" style="max-width:400px;margin:80px auto;background:#1e293b;padding:25px;border-radius:15px;text-align:center"><h2>👑 OWNER</h2><input type="password" id="p" placeholder="Password 🔑"><button onclick="if(document.getElementById('p').value=='simon@pics'){document.getElementById('a').style.display='none';document.getElementById('b').style.display='block';load()}else{alert('Wrong')}">LOGIN</button></div>
-<div id="b" style="display:none;max-width:700px;margin:auto">
-<h2>👑 UGCAMPUS OWNER - Q + SOLUTION</h2>
-<div><div class="stat"><h3 id="v">0</h3><small>Visitors</small></div><div class="stat"><h3 id="d">0</h3><small>Opens</small></div><div class="stat"><h3 id="n">0</h3><small>Papers</small></div></div>
-<h3>➕ Add Paper + Solution</h3>
-<input id="c" placeholder="Course Code e.g DTME 211">
-<input id="t" placeholder="Paper Title e.g Computer Aided Design">
-<select id="y"><option>2024</option><option>2023</option><option>2022</option><option>2021</option></select>
-<input id="ql" placeholder="Question Paper - Google Drive Link">
-<input id="sl" placeholder="Solution - Google Drive Link (optional - can add later)">
-<button onclick="add()">ADD NOW</button>
-<h3>📚 All Papers</h3><div id="list"></div>
+<div id="box">
+<h2>👑 OWNER PANEL - UGCompus</h2>
+<p style="font-size:12px;color:#94a3b8">Only you can access this</p>
+<input id="pass" type="password" placeholder="Enter Owner Password">
+<button onclick="login()">LOGIN AS OWNER</button>
+
+<div id="panel" style="display:none">
+<h3 style="margin-top:20px">➕ Add New Paper</h3>
+<input id="t" placeholder="Paper Title e.g DTME 214"><input id="y" placeholder="Year e.g Y2 S1"><input id="l" placeholder="Google Drive Link">
+<button onclick="add()">ADD PAPER</button>
+<h3 style="margin-top:20px">📊 Stats</h3>
+<p>Total Downloads: <span id="dl">0</span></p>
+<p>Total Papers: <span id="tp">0</span></p>
+<p>Ad Zone: 11684235 (nap5k.com) - Video Ad Active</p>
+<h3>📚 All Papers (You can delete)</h3>
+<div id="list"></div>
+</div>
 </div>
 <script>
-let data=JSON.parse(localStorage.getItem('ug_v2')||'[]');
-function load(){let h='';data.forEach((x,i)=>{h+=`<div class=card><b>${x.c}</b> - ${x.t} (${x.y})<br><small>Q: ${x.ql? '✅': '❌'} | S: ${x.sl? '✅': '❌'}</small><br><button style=background:#ef4444;width:auto;padding:5px 10px;margin-top:5px onclick=del(${i})>Delete</button></div>`});document.getElementById('list').innerHTML=h;document.getElementById('n').innerText=data.length;document.getElementById('v').innerText=localStorage.getItem('visits')||0;document.getElementById('d').innerText=localStorage.getItem('dlCount')||0}
-function add(){let c=document.getElementById('c').value,t=document.getElementById('t').value,y=document.getElementById('y').value,ql=document.getElementById('ql').value,sl=document.getElementById('sl').value;if(!c||!t||!ql)return alert('Need Code, Title, Question Link');data.push({c,t,y,q:ql,ql:ql,s:sl,sl:sl});localStorage.setItem('ug_v2',JSON.stringify(data));load();alert('Added! Students will see Paper + Solution buttons');}
-function del(i){data.splice(i,1);localStorage.setItem('ug_v2',JSON.stringify(data));load()}
-</script></body></html>
+let OWNER_PASS="simon@pics"; // YOUR OWNER PASSWORD - Change it!
+function login(){if(document.getElementById('pass').value==OWNER_PASS){document.getElementById('panel').style.display='block';load();}else alert('Wrong Password Boss!');}
+let papers=JSON.parse(localStorage.getItem('ug')||'[]');
+function load(){
+ document.getElementById('tp').innerText=papers.length;
+ document.getElementById('dl').innerText=localStorage.getItem('dlCount')||0;
+ let h="";papers.forEach((p,i)=>{h+=`<div class="card"><span>${p.t}</span><button onclick="del(${i})" style="width:auto;background:red;padding:5px 10px">Delete</button></div>`});
+ document.getElementById('list').innerHTML=h;
+}
+function add(){
+ let t=document.getElementById('t').value,y=document.getElementById('y').value,l=document.getElementById('l').value;
+ if(!t||!l)return alert('Add Title & Link');
+ papers.push({t,y,l}); localStorage.setItem('ug',JSON.stringify(papers)); load(); alert('Paper Added Boss!');
+}
+function del(i){if(confirm('Delete?')){papers.splice(i,1);localStorage.setItem('ug',JSON.stringify(papers));load();}}
+</script>
+</body></html>
