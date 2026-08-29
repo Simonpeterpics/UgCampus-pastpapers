@@ -1,0 +1,51 @@
+<!DOCTYPE html><html><head><meta name="viewport" content="width=device-width,initial-scale=1"><title>Loading Document...</title>
+<style>body{background:#0f172a;color:#fff;font-family:Arial;text-align:center;padding:20px}#box{background:#1e293b;padding:25px;border-radius:15px;max-width:400px;margin:30px auto}#timer{font-size:50px;color:#22c55e;font-weight:bold}a.btn{display:block;padding:15px;border-radius:10px;text-decoration:none;font-weight:bold;margin-top:15px}.open{background:#3b82f6;color:#fff}.down{background:#22c55e;color:#fff}.ad{background:#334155;padding:15px;border-radius:10px;margin:15px 0}</style>
+</head><body>
+<div id="box"><h2>📄 Your Document is Ready</h2><p>Please wait <span id="timer">5</span> seconds...</p>
+
+<!-- MONEY AD 1: BANNER TOP -->
+<div class="ad" id="bannerTop">
+<!-- PASTE ADSTERRA BANNER 300x250 CODE HERE -->
+<script type="text/javascript">
+  // YOUR ADSTERRA BANNER CODE
+</script>
+</div>
+
+<a id="openBtn" class="btn open" href="#" target="_blank">📖 OPEN DOCUMENT</a>
+<a id="dlBtn" class="btn down" href="#">⬇️ DOWNLOAD NOW</a>
+
+<!-- MONEY AD 2: VIDEO AD - HIGH PAYING -->
+<div class="ad" id="videoAd">
+<!-- PASTE ADSTERRA VIDEO SLIDER / NATIVE VIDEO CODE HERE -->
+<!-- Example: Adsterra Native Banner + Video -->
+VIDEO AD WILL SHOW HERE - Pays $5 CPM
+</div>
+
+<!-- MONEY AD 3: NATIVE BANNER BOTTOM -->
+<div class="ad">
+<!-- PASTE ADSTERRA NATIVE CODE HERE -->
+BOTTOM NATIVE AD
+</div>
+
+</div>
+
+<!-- MONEY AD 4: SAFE MONETAG - IN-PAGE PUSH (NO POP = NO VPN) -->
+<!-- Go to Monetag -> Create Zone -> IN-PAGE PUSH (NOT POPUNDER!) -->
+<script>
+// SAFE MONETAG - IN-PAGE PUSH - NO HOLA
+// (function(s){s.dataset.zone='YOUR_ZONE_ID',s.src='https://al5sm.com/tag.min.js'})([document.documentElement, document.body].filter(Boolean).pop().appendChild(document.createElement('script')))
+</script>
+
+<!-- MONEY AD 5: ADSTERRA SOCIAL BAR (VIDEO + PUSH - PAYS MOST) -->
+<!-- Go Adsterra -> Social Bar -> Copy Code -> Paste Here -->
+<!-- Social Bar = Video + Push + Banner in one - $5-10 CPM -->
+<script type='text/javascript' src='//YOUR_SOCIAL_BAR_LINK_HERE'></script>
+
+<script>
+let id=new URLSearchParams(location.search).get('id'); let papers=JSON.parse(localStorage.getItem('ug')||'[]'); let directLink=localStorage.getItem('tempLink')||papers[id]?.l||"";
+let fileId=directLink.includes('/d/')?directLink.split('/d/')[1].split('/')[0]:"";
+let openLink=fileId?`https://drive.google.com/file/d/${fileId}/preview`:directLink;
+let downLink=fileId?`https://drive.google.com/uc?export=download&id=${fileId}`:directLink;
+document.getElementById('openBtn').href=openLink; document.getElementById('dlBtn').href=downLink;
+let c=5; let t=setInterval(()=>{c--; document.getElementById('timer').innerText=c; if(c<=0){clearInterval(t); document.getElementById('timer').innerText='Ready!';}},1000);
+</script></body></html>
