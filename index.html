@@ -4,10 +4,72 @@
 <meta name="monetag" content="83276356dad28422c990513eeda224b8">
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>UgCampus - Past Papers</title>
-<style>body{background:#f5f7fb;font-family:Arial}header{background:orange;color:white;padding:15px;text-align:center}</style>
+<title>UgCampus - Past Papers | MUK</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:Arial}
+body{background:#f5f7fb}
+header{background:linear-gradient(90deg,#ff4b2b,#ff8a00);color:#fff;padding:18px;text-align:center}
+.ad-box{background:#fff;border:2px dashed #ff8a00;margin:15px;padding:14px;border-radius:12px;text-align:center}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;padding:15px}
+.card{background:#fff;padding:22px;border-radius:12px;text-align:center;box-shadow:0 2px 8px rgba(0,0,0,0.1);cursor:pointer;transition:0.2s}
+.card:hover{transform:scale(1.03)}
+.share-float{position:fixed;bottom:90px;right:20px;background:#25D366;color:#fff;width:60px;height:60px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:28px;box-shadow:0 4px 15px rgba(0,0,0,0.3);z-index:99;border:none;cursor:pointer}
+</style>
+<!-- Monetag verification - DO NOT REMOVE -->
 </head>
 <body>
-<header><h1>UgCampus Pastpapers</h1><p>Verification file - will add design after verify</p></header>
+
+<header>
+<h1>🎓 UgCampus Pastpapers</h1>
+<p>All MUK Pastpapers in one place - FREE!</p>
+</header>
+
+<div class="ad-box">
+<p>📢 <b>ADVERTISE HERE</b></p>
+<p style="font-size:13px">Reach 5000+ MUK Students Daily!</p>
+<p style="font-size:12px;color:green;font-weight:bold">Call/WhatsApp: 0705413433 - Only 50k/week!</p>
+</div>
+
+<div style="padding:15px;text-align:center">
+<input type="text" id="search" placeholder="Search course e.g BIT 1101" style="width:92%;padding:12px;border-radius:25px;border:1px solid #ddd;outline:none">
+</div>
+
+<div class="grid">
+<div class="card" onclick="openPaper('BIT 1101')">📄 BIT 1101</div>
+<div class="card" onclick="openPaper('BCOM 1201')">📄 BCOM 1201</div>
+<div class="card" onclick="openPaper('CSC 1100')">📄 CSC 1100</div>
+<div class="card" onclick="openPaper('MGT 1101')">📄 MGT 1101</div>
+<div class="card" onclick="openPaper('BIT 1202')">📄 BIT 1202</div>
+<div class="card" onclick="openPaper('STA 1101')">📄 STA 1101</div>
+</div>
+
+<div class="ad-box">
+<p>🔥 <b>Hostel Vacancies? Stationery Shop?</b></p>
+<p style="font-size:13px">Advertise to students who need you!</p>
+<a href="https://wa.me/256705413433?text=Hi%20I%20want%20to%20advertise%20on%20UgCampus" style="background:#25D366;color:white;padding:8px 18px;border-radius:20px;text-decoration:none;display:inline-block;margin-top:6px;font-weight:bold">Advertise on WhatsApp</a>
+</div>
+
+<div class="ad-box">
+<p>💰 <b>Make Money With Your Notes?</b></p>
+<p style="font-size:12px">Upload pastpapers & earn - Coming Soon</p>
+</div>
+
+<button class="share-float" onclick="shareApp()">📤</button>
+
+<script>
+const APP_URL="https://ugcompus-pastpapers.netlify.app/";
+function shareApp(){
+ if(navigator.share){ navigator.share({title:'UgCampus',text:'Get MUK pastpapers FREE!',url:APP_URL}); }
+ else{ window.open("https://wa.me/?text="+encodeURIComponent("Get MUK pastpapers FREE! "+APP_URL),"_blank"); }
+}
+function openPaper(code){
+ alert(code + " - Pastpapers coming soon! Share to unlock!");
+ shareApp();
+}
+</script>
+
+<!-- Monetag OnClick Ad - MONEY CODE -->
+<script>(function(s){s.dataset.zone='11680627',s.src='https://al5sm.com/tag.min.js'})([document.documentElement, document.body].filter(Boolean).pop().appendChild(document.createElement('script')))</script>
+
 </body>
 </html>
