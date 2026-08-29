@@ -1,118 +1,56 @@
 <!DOCTYPE html>
 <html>
 <head>
-<meta name="monetag" content="83276356dad28422c990513eeda224b8">
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>UgCampus - Past Papers + Solutions</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>UGCompus Past Papers - DTME</title>
 <style>
-*{margin:0;padding:0;box-sizing:border-box;font-family:Arial}
-body{background:#f5f7fb}
-header{background:linear-gradient(90deg,#ff4b2b,#ff8a00);color:#fff;padding:18px;text-align:center}
-.ad-box{background:#fff;border:2px dashed #ff8a00;margin:12px;padding:12px;border-radius:12px;text-align:center}
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(155px,1fr));gap:12px;padding:15px}
-.card{background:#fff;padding:16px;border-radius:12px;text-align:center;box-shadow:0 2px 8px rgba(0,0,0,0.1);cursor:pointer}
-.viewer{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:#000;z-index:999}
-.viewer iframe{width:100%;height:85%;border:none;background:#fff}
-.viewer-bar{background:#0f172a;color:#fff;padding:10px;display:flex;justify-content:space-between;align-items:center}
-.btn{padding:8px 14px;border-radius:20px;border:none;font-weight:bold;cursor:pointer;text-decoration:none;display:inline-block;font-size:13px}
-.btn-q{background:#ff8a00;color:#fff}.btn-s{background:#22c55e;color:#fff}.btn-d{background:#fff;color:#ff4b2b;border:1px solid #ff4b2b}
-#search{width:92%;padding:12px;border-radius:25px;border:1px solid #ddd;outline:none}
-.share-float{position:fixed;bottom:20px;right:20px;background:#25D366;color:#fff;width:60px;height:60px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:28px;z-index:98;border:none}
+body{font-family:Arial;background:#f5f5f5;margin:0;padding:15px}
+h1{background:#0d47a1;color:white;padding:15px;border-radius:10px;text-align:center}
+.card{background:white;padding:15px;margin:10px 0;border-radius:10px;box-shadow:0 2px 5px #ccc}
+a.paper{display:block;background:#0d47a1;color:white;padding:12px;text-align:center;border-radius:8px;text-decoration:none;margin-top:10px;font-weight:bold}
+#viewer{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:black;z-index:9999}
+#viewer iframe{width:100%;height:100%;border:none}
+.topbar{background:#111;color:white;padding:10px;display:flex;justify-content:space-between}
+.topbar button{background:#ff3d00;color:white;border:none;padding:8px 15px;border-radius:5px}
 </style>
 </head>
 <body>
+<h1>📚 UGCompus Past Papers<br>Makerere DTME 2.1</h1>
 
-<header><h1>🎓 UgCampus Pastpapers</h1><p>Questions + Solutions - FREE!</p></header>
-
-<div class="ad-box">📢 <b>ADVERTISE HERE</b> - 0705413433</div>
-
-<div style="padding:12px;text-align:center"><input type="text" id="search" placeholder="Search e.g DTME 211..." onkeyup="filterPapers()"></div>
-
-<div class="grid" id="paperGrid"></div>
-
-<!-- VIEWER - PAPER OPENS INSIDE APP -->
-<div class="viewer" id="viewer">
-<div class="viewer-bar">
-<button onclick="closeView()" style="background:#ef4444;color:#fff;border:none;padding:8px 12px;border-radius:8px">✕ Close</button>
-<span id="vTitle" style="font-size:13px">Paper</span>
-<a id="vDownload" href="#" target="_blank" style="background:#22c55e;color:#fff;padding:8px 12px;border-radius:20px;text-decoration:none;font-size:12px">⬇ Download</a>
-</div>
-<iframe id="vFrame" src=""></iframe>
-<div style="background:#1e293b;padding:10px;text-align:center">
-</div>
+<div class="card">
+<h3>DTME 211 - Thermodynamics</h3>
+<p>Year 2 Semester 1 - 2023/2024</p>
+<a class="paper" href="#" onclick="openPaper('1T7d5yF8_example_id')">📄 View Paper Inside App</a>
 </div>
 
-<button class="share-float" onclick="window.open('https://wa.me/?text='+encodeURIComponent('Get MUK pastpapers + SOLUTIONS FREE! https://ugcompus-pastpapers.netlify.app/'))">📤</button>
+<div class="card">
+<h3>DTME 212 - Fluid Mechanics</h3>
+<p>Year 2 Semester 1 - 2023/2024</p>
+<a class="paper" href="#" onclick="openPaper('1T7d5yF8_example_id')">📄 View Paper Inside App</a>
+</div>
+
+<div id="viewer">
+<div class="topbar">
+<button onclick="closePaper()">✕ Close</button>
+<button onclick="downloadPaper()">⬇️ Download</button>
+</div>
+<iframe id="frame"></iframe>
+</div>
 
 <script>
-let defaultPapers=[
-{c:"DTME 211",t:"Computer Aided Design",y:"2022",q:"https://drive.google.com/file/d/1-GqMe72e3b0nD_pgJ2wsqS-wsmW_hzPM/preview",s:"",ql:"https://drive.google.com/file/d/1-GqMe72e3b0nD_pgJ2wsqS-wsmW_hzPM/view?usp=sharing",sl:""},
-{c:"BIT 1101",t:"Intro to Computing",y:"2023",q:"",s:"",ql:"",sl:""},
-{c:"BCOM 1201",t:"Business Communication",y:"2023",q:"",s:"",ql:"",sl:""}
-];
-let saved=JSON.parse(localStorage.getItem('ug_v2')||'[]');
-let all=[...defaultPapers,...saved];
-
-function showPapers(list){
- let g=document.getElementById('paperGrid'); g.innerHTML='';
- list.forEach((p,i)=>{
-  let hasSol = p.s || p.sl? '✅ Solution' : '❌ No Solution';
-  g.innerHTML+=`<div class="card"><b>📄 ${p.c}</b><div style="font-size:13px;margin:4px 0">${p.t}</div><small>${p.y} • ${hasSol}</small>
-  <div style="margin-top:10px;display:flex;gap:6px;justify-content:center">
-  <button class="btn btn-q" onclick="openInside(${i},'q')">📄 Paper</button>
-  <button class="btn btn-s" onclick="openInside(${i},'s')">💡 Solution</button>
-  </div></div>`;
- });
+let currentId='';
+function openPaper(id){
+currentId=id;
+document.getElementById('frame').src='https://drive.google.com/file/d/'+id+'/preview';
+document.getElementById('viewer').style.display='block';
 }
-
-function toPreview(link){
- if(!link) return "";
- if(link.includes('/preview')) return link;
- if(link.includes('drive.google.com')){
-  let id=link.match(/\/d\/([^\s\/]+)/);
-  if(id) return `https://drive.google.com/file/d/${id[1]}/preview`;
- }
- return link;
+function closePaper(){
+document.getElementById('viewer').style.display='none';
+document.getElementById('frame').src='';
 }
-
-function toDownload(link){
- if(!link) return "#";
- if(link.includes('drive.google.com')){
-  let id=link.match(/\/d\/([^\s\/]+)/);
-  if(id) return `https://drive.google.com/uc?export=download&id=${id[1]}`;
- }
- return link;
+function downloadPaper(){
+window.open('https://drive.google.com/uc?export=download&id='+currentId,'_blank');
 }
-
-function openInside(i,type){
- let p=all[i];
- let link = type=='q'? (p.q || p.ql) : (p.s || p.sl);
- let title = type=='q'? p.c+' - Question Paper' : p.c+' - SOLUTION';
- if(!link){alert(type=='s'?'Solution not yet uploaded! Be first to upload and earn!':'Question paper link missing! Contact Admin');return;}
-
- // AD FIRST
- localStorage.setItem('tempLink',link);
- // SHOW VIEWER AFTER 2 SEC AD DELAY
- document.getElementById('vTitle').innerText=title;
- document.getElementById('vFrame').src=toPreview(link);
- document.getElementById('vDownload').href=toDownload(link);
- document.getElementById('viewer').style.display='block';
-
- // COUNT
- let dl=parseInt(localStorage.getItem('dlCount')||'0')+1;
- localStorage.setItem('dlCount',dl);
- let v=parseInt(localStorage.getItem('visits')||'0')+1;
- localStorage.setItem('visits',v);
-}
-
-function closeView(){document.getElementById('viewer').style.display='none';document.getElementById('vFrame').src='';}
-function filterPapers(){let q=document.getElementById('search').value.toLowerCase();let f=all.filter(p=>(p.c+p.t).toLowerCase().includes(q));showPapers(f);}
-
-let visits=parseInt(localStorage.getItem('visits')||'0')+1;
-localStorage.setItem('visits',visits);
-showPapers(all);
 </script>
-
 </body>
 </html>
