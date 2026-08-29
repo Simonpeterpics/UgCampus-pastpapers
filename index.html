@@ -1,56 +1,114 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>UGCompus Past Papers - DTME</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>UGCompus Past Papers | Makerere DTME</title>
 <style>
-body{font-family:Arial;background:#f5f5f5;margin:0;padding:15px}
-h1{background:#0d47a1;color:white;padding:15px;border-radius:10px;text-align:center}
-.card{background:white;padding:15px;margin:10px 0;border-radius:10px;box-shadow:0 2px 5px #ccc}
-a.paper{display:block;background:#0d47a1;color:white;padding:12px;text-align:center;border-radius:8px;text-decoration:none;margin-top:10px;font-weight:bold}
-#viewer{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:black;z-index:9999}
-#viewer iframe{width:100%;height:100%;border:none}
-.topbar{background:#111;color:white;padding:10px;display:flex;justify-content:space-between}
-.topbar button{background:#ff3d00;color:white;border:none;padding:8px 15px;border-radius:5px}
+*{margin:0;padding:0;box-sizing:border-box;font-family:system-ui}
+body{background:#f0f4f8;padding:12px}
+.header{background:#0d47a1;color:white;padding:18px;border-radius:12px;text-align:center;margin-bottom:12px}
+.header h1{font-size:22px}
+.header p{opacity:0.9;margin-top:5px;font-size:14px}
+.search{width:100%;padding:14px;border-radius:10px;border:1px solid #ddd;margin-bottom:15px;font-size:16px}
+.card{background:white;border-radius:12px;padding:16px;margin-bottom:12px;box-shadow:0 2px 8px rgba(0,0,0,0.08)}
+.card h3{color:#0d47a1;font-size:17px}
+.card p{color:#666;font-size:13px;margin:6px 0 12px}
+.btns{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.btn{padding:12px;border-radius:8px;text-align:center;font-weight:bold;text-decoration:none;border:none;font-size:14px;cursor:pointer}
+.btn-paper{background:#0d47a1;color:white}
+.btn-solution{background:#e8f0fe;color:#0d47a1;border:1px solid #0d47a1}
+.btn:active{transform:scale(0.96)}
+#viewer{position:fixed;top:0;left:0;width:100%;height:100%;background:#000;z-index:9999;display:none;flex-direction:column}
+.viewer-top{background:#111;color:white;padding:12px;display:flex;justify-content:space-between;align-items:center}
+.viewer-top button{padding:8px 16px;border-radius:6px;border:none;font-weight:bold;cursor:pointer}
+.close-btn{background:#333;color:white}
+.dl-btn{background:#00c853;color:white}
+#viewer iframe{flex:1;width:100%;border:none;background:white}
+.footer{text-align:center;padding:20px;color:#888;font-size:12px}
 </style>
 </head>
 <body>
-<h1>📚 UGCompus Past Papers<br>Makerere DTME 2.1</h1>
 
-<div class="card">
-<h3>DTME 211 - Thermodynamics</h3>
-<p>Year 2 Semester 1 - 2023/2024</p>
-<a class="paper" href="#" onclick="openPaper('1T7d5yF8_example_id')">📄 View Paper Inside App</a>
+<div class="header">
+<h1>📚 UGCompus Past Papers</h1>
+<p>Makerere University - DTME Year 2 Sem 1</p>
 </div>
 
-<div class="card">
-<h3>DTME 212 - Fluid Mechanics</h3>
-<p>Year 2 Semester 1 - 2023/2024</p>
-<a class="paper" href="#" onclick="openPaper('1T7d5yF8_example_id')">📄 View Paper Inside App</a>
+<input class="search" id="search" placeholder="🔍 Search paper e.g. Thermodynamics..." onkeyup="filterPapers()">
+
+<div id="papers">
+
+<div class="card" data-name="DTME 211 Thermodynamics">
+<h3>DTME 211 - Thermodynamics II</h3>
+<p>2023/2024 • Year 2 Sem 1 • 5 Papers</p>
+<div class="btns">
+<button class="btn btn-paper" onclick="openPaper('1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs74')">📄 View Paper</button>
+<button class="btn btn-solution" onclick="openPaper('1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs74')">✅ Solution</button>
+</div>
+</div>
+
+<div class="card" data-name="DTME 212 Fluid Mechanics">
+<h3>DTME 212 - Fluid Mechanics II</h3>
+<p>2023/2024 • Year 2 Sem 1 • 4 Papers</p>
+<div class="btns">
+<button class="btn btn-paper" onclick="openPaper('1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs74')">📄 View Paper</button>
+<button class="btn btn-solution" onclick="openPaper('1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs74')">✅ Solution</button>
+</div>
+</div>
+
+<div class="card" data-name="DTME 213 Mechanics of Machines">
+<h3>DTME 213 - Mechanics of Machines</h3>
+<p>2023/2024 • Year 2 Sem 1 • 3 Papers</p>
+<div class="btns">
+<button class="btn btn-paper" onclick="openPaper('1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs74')">📄 View Paper</button>
+<button class="btn btn-solution" onclick="openPaper('1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs74')">✅ Solution</button>
+</div>
+</div>
+
+<div class="card" data-name="DTME 214 Engineering Drawing">
+<h3>DTME 214 - Engineering Design</h3>
+<p>2023/2024 • Year 2 Sem 1 • 6 Papers</p>
+<div class="btns">
+<button class="btn btn-paper" onclick="openPaper('1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs74')">📄 View Paper</button>
+<button class="btn btn-solution" onclick="openPaper('1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs74')">✅ Solution</button>
+</div>
+</div>
+
 </div>
 
 <div id="viewer">
-<div class="topbar">
-<button onclick="closePaper()">✕ Close</button>
-<button onclick="downloadPaper()">⬇️ Download</button>
+<div class="viewer-top">
+<button class="close-btn" onclick="closePaper()">✕ Close</button>
+<span id="viewerTitle" style="font-size:13px">Preview</span>
+<button class="dl-btn" onclick="downloadPaper()">⬇️ Download</button>
 </div>
-<iframe id="frame"></iframe>
+<iframe id="frame" src=""></iframe>
 </div>
 
+<div class="footer">UGCompus © 2026 - Made for Makerere Students</div>
+
 <script>
-let currentId='';
+let currentId = '';
 function openPaper(id){
-currentId=id;
-document.getElementById('frame').src='https://drive.google.com/file/d/'+id+'/preview';
-document.getElementById('viewer').style.display='block';
+currentId = id;
+document.getElementById('frame').src = 'https://drive.google.com/file/d/'+id+'/preview';
+document.getElementById('viewer').style.display = 'flex';
 }
 function closePaper(){
-document.getElementById('viewer').style.display='none';
-document.getElementById('frame').src='';
+document.getElementById('viewer').style.display = 'none';
+document.getElementById('frame').src = '';
 }
 function downloadPaper(){
-window.open('https://drive.google.com/uc?export=download&id='+currentId,'_blank');
+window.open('https://drive.google.com/uc?export=download&id='+currentId, '_blank');
+}
+function filterPapers(){
+let q = document.getElementById('search').value.toLowerCase();
+document.querySelectorAll('.card').forEach(c=>{
+c.style.display = c.dataset.name.toLowerCase().includes(q) ? 'block' : 'none';
+});
 }
 </script>
+
 </body>
 </html>
