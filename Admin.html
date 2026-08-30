@@ -1,39 +1,75 @@
-<!DOCTYPE html><html><head><meta name="viewport" content="width=device-width,initial-scale=1"><title>Owner Panel</title>
-<style>body{background:#0f172a;color:#fff;font-family:Arial;padding:20px}#box{max-width:500px;margin:auto;background:#1e293b;padding:20px;border-radius:12px}input,button{width:100%;padding:12px;margin-top:10px;border-radius:8px;border:none}button{background:#22c55e;color:#fff;font-weight:bold;cursor:pointer}.card{background:#334155;padding:10px;border-radius:8px;margin-top:10px;display:flex;justify-content:space-between}</style>
-</head><body>
-<div id="box">
-<h2>👑 OWNER PANEL - UGCompus</h2>
-<p style="font-size:12px;color:#94a3b8">Only you can access this</p>
-<input id="pass" type="password" placeholder="Enter Owner Password">
-<button onclick="login()">LOGIN AS OWNER</button>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Admin - UGCompus</title>
+<style>
+body{font-family:Arial;background:#f0f4f8;padding:20px;max-width:600px;margin:auto}
+#login{background:#fff;padding:20px;border-radius:12px;margin-top:50px;text-align:center}
+#main{display:none}
+input,button{width:100%;padding:12px;margin:6px 0;border-radius:8px;border:1px solid #ddd}
+button{background:#0f172a;color:#fff;font-weight:bold;cursor:pointer}
+.card{background:#fff;padding:12px;border-radius:10px;margin-top:10px;display:flex;justify-content:space-between;align-items:center}
+.del{background:#fee2e2;color:#dc2626;border:none;padding:8px 12px;border-radius:6px;width:auto}
+</style>
+</head>
+<body>
 
-<div id="panel" style="display:none">
-<h3 style="margin-top:20px">➕ Add New Paper</h3>
-<input id="t" placeholder="Paper Title e.g DTME 214"><input id="y" placeholder="Year e.g Y2 S1"><input id="l" placeholder="Google Drive Link">
-<button onclick="add()">ADD PAPER</button>
-<h3 style="margin-top:20px">📊 Stats</h3>
-<p>Total Downloads: <span id="dl">0</span></p>
-<p>Total Papers: <span id="tp">0</span></p>
-<p>Ad Zone: 11684235 (nap5k.com) - Video Ad Active</p>
-<h3>📚 All Papers (You can delete)</h3>
+<div id="login">
+<h2>🔐 Owner Login</h2>
+<input type="password" id="pass" placeholder="Enter Password">
+<button onclick="check()">LOGIN</button>
+<p id="err" style="color:red"></p>
+</div>
+
+<div id="main">
+<h2>Admin - Add / Delete Papers</h2>
+<input id="t" placeholder="Title e.g DTME 211 Thermodynamics">
+<input id="y" placeholder="Year e.g Y2 S1">
+<input id="l" placeholder="Google Drive Link">
+<button onclick="add()">➕ ADD PAPER</button>
+<hr>
+<h3>Your Papers</h3>
 <div id="list"></div>
 </div>
-</div>
+
 <script>
-let OWNER_PASS="simon@pics"; // YOUR OWNER PASSWORD - Change it!
-function login(){if(document.getElementById('pass').value==OWNER_PASS){document.getElementById('panel').style.display='block';load();}else alert('Wrong Password Boss!');}
-let papers=JSON.parse(localStorage.getItem('ug')||'[]');
-function load(){
- document.getElementById('tp').innerText=papers.length;
- document.getElementById('dl').innerText=localStorage.getItem('dlCount')||0;
- let h="";papers.forEach((p,i)=>{h+=`<div class="card"><span>${p.t}</span><button onclick="del(${i})" style="width:auto;background:red;padding:5px 10px">Delete</button></div>`});
- document.getElementById('list').innerHTML=h;
+const PASSWORD="Simon@pics";
+function check(){
+ let p=document.getElementById('pass').value;
+ if(p===PASSWORD){
+  document.getElementById('login').style.display='none';
+  document.getElementById('main').style.display='block';
+  show();
+ } else {
+  document.getElementById('err').innerText='Wrong Password Boss!';
+ }
 }
+
+let papers=JSON.parse(localStorage.getItem('ug_papers')||'[]');
 function add(){
- let t=document.getElementById('t').value,y=document.getElementById('y').value,l=document.getElementById('l').value;
- if(!t||!l)return alert('Add Title & Link');
- papers.push({t,y,l}); localStorage.setItem('ug',JSON.stringify(papers)); load(); alert('Paper Added Boss!');
+ let title=document.getElementById('t').value;
+ let year=document.getElementById('y').value;
+ let link=document.getElementById('l').value;
+ if(!title||!link){alert('Add Title & Link!');return}
+ papers.push({t:title,y:year,l:link});
+ localStorage.setItem('ug_papers',JSON.stringify(papers));
+ document.getElementById('t').value='';document.getElementById('l').value='';
+ show();
 }
-function del(i){if(confirm('Delete?')){papers.splice(i,1);localStorage.setItem('ug',JSON.stringify(papers));load();}}
+function del(i){
+ if(confirm('Delete '+papers[i].t+'?')){
+  papers.splice(i,1);
+  localStorage.setItem('ug_papers',JSON.stringify(papers));
+  show();
+ }
+}
+function show(){
+ let div=document.getElementById('list');
+ if(papers.length==0){div.innerHTML='<p>No papers yet</p>';return}
+ div.innerHTML=papers.map((p,i)=>`<div class="card"><div><b>${p.t}</b><br><small>${p.y}</small></div><button class="del" onclick="del(${i})">🗑️</button></div>`).join('');
+}
 </script>
-</body></html>
+</body>
+</html>
