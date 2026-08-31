@@ -1,1 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>UgCampus PastPapers</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700&display=swap');
+body{font-family:'Outfit',sans-serif;background:#e8f5e9;min-height:100vh}
+.glass{background:rgba(255,255,255,0.9);backdrop-filter:blur(12px);border:1px solid rgba(255,255,255,0.7)}
+.active-menu{background:#15803d;color:white!important;border-radius:14px}
+.card-shadow{box-shadow:0 4px 20px rgba(0,0,0,0.06)}
+</style>
+</head>
+<body class="p-3 md:p-4">
 
+<!-- TOP NAV -->
+<nav class="glass rounded-[20px] px-5 py-3 flex justify-between items-center max-w-7xl mx-auto">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 bg-green-700 rounded-full flex items-center justify-center text-white font-bold">UG</div>
+<div><h1 class="font-bold text-green-900 leading-none">UgCampus</h1><p class="text-xs text-gray-500 font-bold tracking-widest">PastPapers</p></div>
+</div>
+<div class="flex items-center gap-3">
+<button id="loginBtn" onclick="document.getElementById('userModal').classList.remove('hidden')" class="bg-green-700 text-white px-6 py-2 rounded-full font-bold text-sm">Login</button>
+<span id="userName" class="hidden font-bold text-sm text-green-900"></span>
+<button id="logoutBtn" onclick="logout()" class="hidden bg-white border px-4 py-2 rounded-full text-xs">Logout</button>
+<a href="/Admin.html" class="text-xs text-gray-400">Admin</a>
+</div>
+</nav>
+
+<div class="max-w-7xl mx-auto grid lg:grid-cols-[280px_1fr] gap-4 mt-4">
+
+<!-- LEFT MENU - WORKING -->
+<div class="glass rounded-[24px] p-4 h-fit">
+<button onclick="setTab('dashboard')" id="m-dashboard" class="active-menu w-full text-left p-3 flex gap-3 items-center font-semibold text-sm"><i class="fa fa-border-all"></i> Dashboard</button>
+<button onclick="setTab('papers')" id="m-papers" class="w-full text-left p-3 flex gap-3 items-center text-sm text-gray-700"><i class="fa fa-file"></i> Past Papers</button>
+<button onclick="setTab('favorites')" id="m-favorites" class="w-full text-left p-3 flex gap-3 items-center text-sm text-gray-700"><i class="fa fa-heart"></i> Favorites</button>
+<button onclick="setTab('notes')" id="m-notes" class="w-full text-left p-3 flex gap-3 items-center text-sm text-gray-700"><i class="fa fa-book"></i> Revision Notes</button>
+<button onclick="setTab('analytics')" id="m-analytics" class="w-full text-left p-3 flex gap-3 items-center text-sm text-gray-700"><i class="fa fa-chart-simple"></i> Analytics</button>
+<div class="mt-8 bg-[#f1f8e9] rounded-2xl p-4 border border-green-100">
+<p class="font-bold text-sm text-green-900">Welcome!</p>
+<p id="welcomeSide" class="text-xs text-gray-600 mt-1">Login to like and comment on papers.</p>
+</div>
+</div>
+
+<!-- RIGHT -->
+<div class="space-y-4">
+<div class="glass rounded-[24px] p-6 md:p-8 card-shadow">
+<h2 class="text-[26px] font-bold text-green-950">Welcome back, <span id="welcomeName">Student</span>!</h2>
+<p class="text-sm text-green-700/70 mt-1">Ready to continue studying? Search past papers below.</p>
+<div class="mt-5 bg-white rounded-full p-2 flex shadow-sm">
+<input id="search" oninput="render()" placeholder="Search BCOM, BIT, Law..." class="flex-1 px-6 outline-none bg-transparent text-sm">
+<button class="bg-green-700 text-white px-8 py-3 rounded-full font-bold text-sm">Search</button>
+</div>
+<div class="grid grid-cols-3 gap-3 mt-6">
+<div class="bg-white rounded-2xl p-4"><p class="text-[11px] text-gray-500 leading-tight">Papers<br>Downloaded</p><p id="statDown" class="text-2xl font-bold text-green-900 mt-1">0</p></div>
+<div class="bg-white rounded-2xl p-4"><p class="text-[11px] text-gray-500">Likes Given</p><p id="statLike" class="text-2xl font-bold text-green-900 mt-1">0</p></div>
+<div class="bg-white rounded-2xl p-4"><p class="text-[11px] text-gray-500">Comments</p><p id="statComm" class="text-2xl font-bold text-green-900 mt-1">0</p></div>
+</div>
+</div>
+
+<div id="papersGrid" class="grid gap-3"></div>
+<div id="emptyState" class="hidden glass rounded-[24px] p-12 text-center"><p class="text-4xl mb-3">📄</p><h3 class="font-bold">No Papers Yet</h3><p class="text-sm text-gray-500 mt-1">Admin hasn't uploaded. Upload from Admin panel.</p></div>
+<div id="notesState" class="hidden glass rounded-[24px] p-8"><h3 class="font-bold text-lg">Revision Notes</h3><p class="text-sm text-gray-600 mt-2">Your saved notes for UgCampus PastPapers.</p><textarea id="noteInput" placeholder="Write quick revision note..." class="w-full mt-4 border rounded-2xl p-4 text-sm outline-none"></textarea><button onclick="saveNote()" class="mt-3 bg-green-700 text-white px-6 py-2 rounded-full text-sm font-bold">Save Note</button><div id="notesList" class="mt-4 space-y-2"></div></div>
+</div>
+</div>
+
+<!-- LOGIN -->
+<div id="userModal" class="hidden fixed inset-0 bg-black/40 backdrop-blur-sm z-[100] flex items-center justify-center p-4">
+<div class="bg-white rounded-[24px] p-7 w-full max-w-sm"><h3 class="font-bold text-lg">UgCampus Login</h3><p class="text-xs text-gray-500 mb-4">Login to download, like & comment</p><input id="uName" placeholder="Your name" class="w-full border rounded-full px-5 py-3 mb-3 outline-none text-sm"><button onclick="userLogin()" class="w-full bg-green-700 text-white py-3 rounded-full font-bold text-sm">Login to UgCampus</button><button onclick="document.getElementById('userModal').classList.add('hidden')" class="w-full mt-2 text-xs text-gray-500">Cancel</button></div>
+</div>
+
+<!-- COMMENT -->
+<div id="commentModal" class="hidden fixed inset-0 bg-black/40 backdrop-blur-sm z-[100] flex items-center justify-center p-4">
+<div class="bg-white rounded-[24px] w-full max-w-md max-h-[80vh] flex flex-col"><div class="p-5 border-b flex justify-between"><h3 id="commentTitle" class="font-bold text-sm">Comments</h3><button onclick="document.getElementById('commentModal').classList.add('hidden')" class="w-7 h-7 bg-gray-100 rounded-full text-xs">✕</button></div><div id="commentList" class="flex-1 overflow-auto p-5 space-y-2"></div><div class="p-3 border-t flex gap-2"><input id="commentInput" placeholder="Add comment..." class="flex-1 border rounded-full px-4 py-2.5 text-sm outline-none"><button onclick="postComment()" class="bg-green-700 text-white px-5 py-2.5 rounded-full text-sm font-bold">Send</button></div></div>
+</div>
+
+<script>
+let currentTab='dashboard';
+let currentUser=JSON.parse(localStorage.getItem('edu_user'))||null;
+let currentCommentId=null;
+let papers=JSON.parse(localStorage.getItem('edu_papers_v5'))||[];
+let myNotes=JSON.parse(localStorage.getItem('my_notes'))||[];
+function save(){localStorage.setItem('edu_papers_v5',JSON.stringify(papers));}
+function setTab(tab){
+currentTab=tab;
+document.querySelectorAll('[id^="m-"]').forEach(e=>e.classList.remove('active-menu'));
+document.getElementById('m-'+tab).classList.add('active-menu');
+render();
+}
+function checkUser(){
+if(currentUser){
+document.getElementById('userName').textContent=currentUser.name;
+document.getElementById('userName').classList.remove('hidden');
+document.getElementById('welcomeName').textContent=currentUser.name;
+document.getElementById('welcomeSide').textContent='Logged in as '+currentUser.name;
+document.getElementById('loginBtn').classList.add('hidden');
+document.getElementById('logoutBtn').classList.remove('hidden');
+}
+updateStats();
+}
+checkUser();
+function userLogin(){
+let n=document.getElementById('uName').value.trim();
+if(!n)return alert('Enter name');
+currentUser={name:n};localStorage.setItem('edu_user',JSON.stringify(currentUser));
+document.getElementById('userModal').classList.add('hidden');checkUser();render();
+}
+function logout(){localStorage.removeItem('edu_user');location.reload();}
+function updateStats(){
+if(!currentUser){document.getElementById('statDown').textContent='0';document.getElementById('statLike').textContent='0';document.getElementById('statComm').textContent='0';return;}
+let liked=papers.filter(p=>p.likedBy.includes(currentUser.name)).length;
+let comms=papers.reduce((a,p)=>a+p.comments.filter(c=>c.user===currentUser.name).length,0);
+let downs=parseInt(localStorage.getItem('down_count')||'0');
+document.getElementById('statDown').textContent=downs;
+document.getElementById('statLike').textContent=liked;
+document.getElementById('statComm').textContent=comms;
+}
+function getDirectLink(link){
+if(link.includes('drive.google.com')){
+let m=link.match(/\/d\/([a-zA-Z0-9_-]+)/) || link.match(/id=([a-zA-Z0-9_-]+)/);
+if(m){return 'https://drive.google.com/uc?export=download&id='+m[1];}
+}
+return link;
+}
+function doDownload(id){
+if(!currentUser){document.getElementById('userModal').classList.remove('hidden');return;}
+let p=papers.find(x=>x.id===id);
+let direct=getDirectLink(p.link);
+let c=parseInt(localStorage.getItem('down_count')||'0')+1;
+localStorage.setItem('down_count',c);
+p.downloads++;save();updateStats();render();
+let a=document.createElement('a');a.href=direct;a.download='';document.body.appendChild(a);a.click();a.remove();
+}
+function doOpen(id){let p=papers.find(x=>x.id===id);window.open(p.link,'_blank');}
+function render(){
+let q=document.getElementById('search').value.toLowerCase();
+let grid=document.getElementById('papersGrid');
+let empty=document.getElementById('emptyState');
+let notesBox=document.getElementById('notesState');
+if(currentTab==='notes'){
+grid.classList.add('hidden');empty.classList.add('hidden');notesBox.classList.remove('hidden');
+document.getElementById('notesList').innerHTML=myNotes.map(n=>`<div class="bg-white rounded-xl p-3 text-sm border">${n}</div>`).join('')||'<p class="text-xs text-gray-400">No notes yet</p>';
+return;
+}
+notesBox.classList.add('hidden');
+let filtered=[...papers];
+if(currentTab==='favorites'){
+if(!currentUser){document.getElementById('userModal').classList.remove('hidden');setTab('dashboard');return;}
+filtered=filtered.filter(p=>p.likedBy.includes(currentUser.name));
+}
+if(q){filtered=filtered.filter(p=>p.title.toLowerCase().includes(q)||p.subject.toLowerCase().includes(q));}
+if(papers.length===0 && currentTab!=='favorites'){grid.classList.add('hidden');empty.classList.remove('hidden');return;}
+if(filtered.length===0){grid.classList.remove('hidden');empty.classList.add('hidden');grid.innerHTML=`<div class="glass rounded-2xl p-8 text-center text-sm text-gray-500">No papers in ${currentTab}</div>`;return;}
+empty.classList.add('hidden');grid.classList.remove('hidden');
+grid.innerHTML=filtered.map(p=>{
+let liked=currentUser&&p.likedBy.includes(currentUser.name);
+return `<div class="glass rounded-[20px] p-4 card-shadow">
+<div class="flex justify-between items-center mb-2"><span class="bg-green-100 text-green-800 text-[10px] px-3 py-1 rounded-full font-bold uppercase">${p.subject} • ${p.year}</span><span class="text-[11px] text-gray-500">${p.downloads} downloads</span></div>
+<h3 class="font-bold text-[15px] text-gray-900 leading-tight">${p.title}</h3>
+<p class="text-xs text-gray-500 mt-1">${p.uni} • ${p.course}</p>
+<div class="flex gap-2 mt-4">
+<button onclick="doOpen(${p.id})" class="flex-1 bg-green-700 text-white py-3 rounded-full font-bold text-sm flex items-center justify-center gap-2"><i class="fa-solid fa-up-right-from-square text-xs"></i> Open</button>
+<button onclick="doDownload(${p.id})" class="w-12 h-12 bg-white border rounded-full flex items-center justify-center shadow-sm" title="Direct Download"><i class="fa-solid fa-download text-green-700"></i></button>
+<button onclick="sharePaper(${p.id})" class="bg-white px-5 py-3 rounded-full text-sm font-bold border flex items-center gap-1"><i class="fa-solid fa-share-nodes"></i> Share</button>
+</div>
+<div class="flex gap-4 mt-3 border-t border-black/5 pt-3">
+<button onclick="likePaper(${p.id})" class="text-xs flex items-center gap-1 ${liked?'text-red-500':'text-gray-600'}"><i class="fa-${liked?'solid':'regular'} fa-heart"></i> ${p.likes} Like</button>
+<button onclick="openComment(${p.id})" class="text-xs flex items-center gap-1 text-gray-600"><i class="fa-regular fa-comment"></i> ${p.comments.length} Comment</button>
+</div>
+</div>`;
+}).join('');
+}
+render();
+function likePaper(id){
+if(!currentUser){document.getElementById('userModal').classList.remove('hidden');return;}
+let p=papers.find(x=>x.id===id);
+if(p.likedBy.includes(currentUser.name)){p.likedBy=p.likedBy.filter(n=>n!==currentUser.name);p.likes--;}else{p.likedBy.push(currentUser.name);p.likes++;}
+save();render();updateStats();
+}
+function sharePaper(id){
+let p=papers.find(x=>x.id===id);
+let url=p.link;
+if(navigator.share){navigator.share({title:p.title,url});}
+else{navigator.clipboard.writeText(url);alert('Link copied!');}
+}
+function openComment(id){
+if(!currentUser){document.getElementById('userModal').classList.remove('hidden');return;}
+currentCommentId=id;
+let p=papers.find(x=>x.id===id);
+document.getElementById('commentTitle').textContent=p.title;
+document.getElementById('commentModal').classList.remove('hidden');
+loadComments();
+}
+function loadComments(){
+let p=papers.find(x=>x.id===currentCommentId);
+document.getElementById('commentList').innerHTML=p.comments.map(c=>`<div class="bg-gray-50 rounded-xl p-3"><p class="text-[11px] font-bold text-green-800">${c.user}</p><p class="text-sm mt-1">${c.text}</p></div>`).join('')||'<p class="text-xs text-gray-400">No comments yet</p>';
+}
+function postComment(){
+let t=document.getElementById('commentInput').value.trim();
+if(!t)return;
+let p=papers.find(x=>x.id===currentCommentId);
+p.comments.push({user:currentUser.name,text:t});
+document.getElementById('commentInput').value='';save();loadComments();render();updateStats();
+}
+function saveNote(){
+let t=document.getElementById('noteInput').value.trim();
+if(!t)return;
+myNotes.push(t);
+localStorage.setItem('my_notes',JSON.stringify(myNotes));
+document.getElementById('noteInput').value='';render();
+}
+</script>
+</body>
+</html>
