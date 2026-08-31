@@ -1,44 +1,31 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>PastPapers Admin</title>
-<script src="https://cdn.tailwindcss.com"></script>
-<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-</head>
-<body class="bg-[#0a0a0a] min-h-screen flex items-center justify-center p-4">
-<div id="loginBox" class="w-full max-w-sm">
-<div class="bg-[#1a1a1a] rounded-[24px] p-8 border border-white/10 text-center">
-<div class="w-16 h-16 bg-purple-600 rounded-2xl flex items-center justify-center mx-auto mb-4"><i class="fa-solid fa-file text-white text-xl"></i></div>
-<h2 class="text-white font-bold text-2xl">Admin Login</h2><p class="text-white/50 text-sm mb-6">PastPapers ADMIN</p>
-<div class="relative mb-4">
-<input id="adminPass" type="password" placeholder="Enter password" class="w-full bg-[#2a2a2a] border border-purple-500/50 rounded-full px-6 py-3.5 pr-12 text-white placeholder-white/50 outline-none text-sm">
-<button type="button" onclick="togglePass()" class="absolute right-2 top-1/2 -translate-y-1/2 w-9 h-9 bg-white/10 rounded-full flex items-center justify-center text-white/60 hover:text-white"><i id="eyeIcon" class="fa-solid fa-eye text-xs"></i></button>
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Admin - UgCampus</title><script src="https://cdn.tailwindcss.com"></script></head>
+<body class="bg-green-50 p-6">
+<div class="max-w-xl mx-auto bg-white rounded-2xl p-6 shadow">
+<h1 class="font-bold text-xl mb-4">UgCampus Admin - Add Paper</h1>
+<input id="title" placeholder="Paper Title e.g BCOM Year 2 Accounting" class="w-full border rounded-full px-4 py-3 mb-3">
+<input id="subject" placeholder="Subject e.g Accounting" class="w-full border rounded-full px-4 py-3 mb-3">
+<input id="year" placeholder="Year e.g 2023" class="w-full border rounded-full px-4 py-3 mb-3">
+<input id="uni" placeholder="University e.g Makerere" class="w-full border rounded-full px-4 py-3 mb-3">
+<input id="course" placeholder="Course e.g BCOM" class="w-full border rounded-full px-4 py-3 mb-3">
+<input id="link" placeholder="Google Drive Link" class="w-full border rounded-full px-4 py-3 mb-3">
+<button onclick="savePaper()" id="btn" class="w-full bg-green-700 text-white py-3 rounded-full font-bold">Save to Database</button>
+<p id="status" class="text-sm mt-3 text-center"></p>
+<a href="/" class="block text-center mt-4 text-sm underline">Go to Home</a>
+<div id="list" class="mt-6"></div>
 </div>
-<button onclick="adminLogin()" class="w-full bg-purple-600 hover:bg-purple-700 text-white py-3.5 rounded-full font-bold text-sm">Login</button>
-</div>
-</div>
-<div id="adminPanel" class="hidden w-full max-w-4xl">
-<div class="bg-[#1a1a1a] rounded-[20px] p-6 mb-4 flex justify-between items-center border border-white/10"><h2 class="font-bold text-white">Upload Past Paper - UgCampus</h2><a href="/" class="text-xs bg-white/10 text-white px-4 py-2 rounded-full">View Site</a></div>
-<div class="bg-[#1a1a1a] rounded-[20px] p-6 grid md:grid-cols-2 gap-4 border border-white/10">
-<input id="pTitle" placeholder="Title e.g Mathematics P1 2023" class="bg-[#2a2a2a] border border-white/10 rounded-full px-5 py-3 text-sm outline-none text-white placeholder-white/40 md:col-span-2">
-<select id="pUni" class="bg-[#2a2a2a] border border-white/10 rounded-full px-5 py-3 text-sm text-white outline-none max-h-60">
-<option value="">Select University - All Uganda</option>
-<option>Makerere University</option><option>MUBS</option><option>Kyambogo University</option><option>MUST</option><option>Gulu University</option><option>Busitema University</option><option>Muni University</option><option>Kabale University</option><option>Lira University</option><option>Soroti University</option><option>Mountains of the Moon University</option><option>IUIU</option><option>UCU</option><option>Uganda Martyrs University</option><option>Nkumba University</option><option>Ndejje University</option><option>Bugema University</option><option>Bishop Stuart University</option><option>KIU</option><option>Kampala University</option><option>Cavendish University</option><option>Victoria University</option><option>ISBAT University</option><option>IUEA</option><option>African Bible University</option><option>Aga Khan University</option><option>All Saints University Lango</option><option>Ankole Western University</option><option>Avance International University</option><option>Clarke International University</option><option>King Ceasor University</option><option>LivingStone International University</option><option>Muteesa I Royal University</option><option>St. Lawrence University</option><option>Team University</option><option>UTAMU</option><option>University of Kisubi</option><option>YMCA Comprehensive Institute</option><option>Other University</option>
-</select>
-<select id="pCourse" class="bg-[#2a2a2a] border border-white/10 rounded-full px-5 py-3 text-sm text-white outline-none"><option>BCOM</option><option>BIT</option><option>BBA</option><option>LAW</option><option>BSC</option><option>BA Education</option><option>Engineering</option><option>Medicine</option><option>Nursing</option><option>Other</option></select>
-<input id="pSubject" placeholder="Subject" class="bg-[#2a2a2a] border border-white/10 rounded-full px-5 py-3 text-sm outline-none text-white placeholder-white/40">
-<input id="pYear" placeholder="Year" class="bg-[#2a2a2a] border border-white/10 rounded-full px-5 py-3 text-sm outline-none text-white placeholder-white/40">
-<input id="pLink" placeholder="Google Drive Link" class="bg-[#2a2a2a] border border-white/10 rounded-full px-5 py-3 text-sm outline-none text-white placeholder-white/40 md:col-span-2">
-<button onclick="uploadPaper()" class="md:col-span-2 bg-purple-600 text-white py-3 rounded-full font-bold text-sm"><i class="fa fa-upload"></i> Upload Paper</button>
-</div><div id="paperList" class="mt-4 space-y-2"></div></div>
 <script>
-function togglePass(){let input=document.getElementById('adminPass');let icon=document.getElementById('eyeIcon');if(input.type==='password'){input.type='text';icon.classList.remove('fa-eye');icon.classList.add('fa-eye-slash');}else{input.type='password';icon.classList.remove('fa-eye-slash');icon.classList.add('fa-eye');}}
-let papers=JSON.parse(localStorage.getItem('edu_papers_v5'))||[];
-function adminLogin(){let pass=document.getElementById('adminPass').value;if(pass==='Simon@pics'){document.getElementById('loginBox').classList.add('hidden');document.getElementById('adminPanel').classList.remove('hidden');document.getElementById('adminPanel').classList.add('block');renderAdmin();}else alert('Wrong password');}
-function uploadPaper(){let t=document.getElementById('pTitle').value.trim();let uni=document.getElementById('pUni').value;let course=document.getElementById('pCourse').value;let subj=document.getElementById('pSubject').value.trim()||'General';let year=document.getElementById('pYear').value.trim()||'2024';let link=document.getElementById('pLink').value.trim();if(!t||!uni||!link)return alert('Fill Title, University and Link');papers.push({id:Date.now(),title:t,uni:uni,course:course,subject:subj,year:year,link:link,downloads:0,likes:0,likedBy:[],comments:[]});localStorage.setItem('edu_papers_v5',JSON.stringify(papers));document.getElementById('pTitle').value='';document.getElementById('pLink').value='';renderAdmin();alert('Uploaded!');}
-function renderAdmin(){document.getElementById('paperList').innerHTML=papers.map(p=>`<div class="bg-[#1a1a1a] border border-white/10 rounded-2xl p-4 flex justify-between items-center"><div><p class="font-bold text-sm text-white">${p.title}</p><p class="text-xs text-white/50">${p.uni} • ${p.course} • ${p.year}</p></div><button onclick="deletePaper(${p.id})" class="text-red-400 text-xs bg-red-500/10 px-3 py-1 rounded-full">Delete</button></div>`).join('');}
-function deletePaper(id){papers=papers.filter(p=>p.id!==id);localStorage.setItem('edu_papers_v5',JSON.stringify(papers));renderAdmin();}
+async function load(){let r=await fetch('/api/papers');let data=await r.json();document.getElementById('list').innerHTML=data.map(p=>`<div class="border-b py-2 text-sm">${p.title} - ${p.uni}</div>`).join('')}
+load();
+async function savePaper(){
+ let btn=document.getElementById('btn');btn.textContent='Saving...';
+ let body={title:document.getElementById('title').value,subject:document.getElementById('subject').value,year:document.getElementById('year').value,uni:document.getElementById('uni').value,course:document.getElementById('course').value,link:document.getElementById('link').value}
+ let res=await fetch('/api/papers',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
+ if(res.ok){document.getElementById('status').textContent='✅ Saved!';load();}else{document.getElementById('status').textContent='❌ Failed';}
+ btn.textContent='Save to Database';
+}
 </script>
 </body>
 </html>
