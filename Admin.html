@@ -1,31 +1,56 @@
 <!DOCTYPE html>
-<html lang="en">
-<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Admin - UgCampus</title><script src="https://cdn.tailwindcss.com"></script></head>
-<body class="bg-green-50 p-6">
-<div class="max-w-xl mx-auto bg-white rounded-2xl p-6 shadow">
-<h1 class="font-bold text-xl mb-4">UgCampus Admin - Add Paper</h1>
-<input id="title" placeholder="Paper Title e.g BCOM Year 2 Accounting" class="w-full border rounded-full px-4 py-3 mb-3">
-<input id="subject" placeholder="Subject e.g Accounting" class="w-full border rounded-full px-4 py-3 mb-3">
-<input id="year" placeholder="Year e.g 2023" class="w-full border rounded-full px-4 py-3 mb-3">
-<input id="uni" placeholder="University e.g Makerere" class="w-full border rounded-full px-4 py-3 mb-3">
-<input id="course" placeholder="Course e.g BCOM" class="w-full border rounded-full px-4 py-3 mb-3">
-<input id="link" placeholder="Google Drive Link" class="w-full border rounded-full px-4 py-3 mb-3">
+<html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Admin - UgCampus</title><script src="https://cdn.tailwindcss.com"></script><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet"></head>
+<body class="bg-green-50 min-h-screen flex items-center justify-center p-4">
+<!-- LOGIN BOX -->
+<div id="loginBox" class="bg-white rounded-[24px] p-7 w-full max-w-sm shadow-xl">
+<h1 class="font-bold text-lg text-center">🔒 Admin Login</h1>
+<p class="text-xs text-gray-500 text-center mt-1 mb-5">Password is hidden as •••••</p>
+<div class="relative">
+<input id="passInput" type="password" placeholder="Enter Admin Password" class="w-full border rounded-full px-5 py-3 pr-12 outline-none text-sm">
+<button onclick="toggle()" class="absolute right-3 top-2.5 w-8 h-8 bg-gray-100 rounded-full"><i id="eye" class="fa-solid fa-eye text-xs"></i></button>
+</div>
+<button onclick="checkPass()" id="loginBtn" class="w-full mt-4 bg-green-700 text-white py-3 rounded-full font-bold text-sm">Unlock Admin</button>
+<p id="loginErr" class="text-xs text-red-500 mt-2 text-center"></p>
+</div>
+<!-- ADMIN FORM - Hidden until password correct -->
+<div id="adminBox" class="hidden max-w-xl mx-auto bg-white rounded-2xl p-6 shadow w-full">
+<h1 class="font-bold text-xl mb-4">UgCampus - Add Paper</h1>
+<input id="title" placeholder="Paper Title" class="w-full border rounded-full px-4 py-3 mb-3 outline-none text-sm">
+<input id="subject" placeholder="Subject" class="w-full border rounded-full px-4 py-3 mb-3 outline-none text-sm">
+<input id="year" placeholder="Year" class="w-full border rounded-full px-4 py-3 mb-3 outline-none text-sm">
+<input id="uni" placeholder="University" class="w-full border rounded-full px-4 py-3 mb-3 outline-none text-sm">
+<input id="course" placeholder="Course" class="w-full border rounded-full px-4 py-3 mb-3 outline-none text-sm">
+<input id="link" placeholder="Google Drive Link" class="w-full border rounded-full px-4 py-3 mb-3 outline-none text-sm">
 <button onclick="savePaper()" id="btn" class="w-full bg-green-700 text-white py-3 rounded-full font-bold">Save to Database</button>
 <p id="status" class="text-sm mt-3 text-center"></p>
-<a href="/" class="block text-center mt-4 text-sm underline">Go to Home</a>
 <div id="list" class="mt-6"></div>
 </div>
 <script>
-async function load(){let r=await fetch('/api/papers');let data=await r.json();document.getElementById('list').innerHTML=data.map(p=>`<div class="border-b py-2 text-sm">${p.title} - ${p.uni}</div>`).join('')}
-load();
-async function savePaper(){
- let btn=document.getElementById('btn');btn.textContent='Saving...';
- let body={title:document.getElementById('title').value,subject:document.getElementById('subject').value,year:document.getElementById('year').value,uni:document.getElementById('uni').value,course:document.getElementById('course').value,link:document.getElementById('link').value}
- let res=await fetch('/api/papers',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
- if(res.ok){document.getElementById('status').textContent='✅ Saved!';load();}else{document.getElementById('status').textContent='❌ Failed';}
- btn.textContent='Save to Database';
+function toggle(){let i=document.getElementById('passInput');let eye=document.getElementById('eye');if(i.type==='password'){i.type='text';eye.className='fa-solid fa-eye-slash text-xs'}else{i.type='password';eye.className='fa-solid fa-eye text-xs'}}
+async function checkPass(){
+ let p=document.getElementById('passInput').value;
+ if(!p)return;
+ document.getElementById('loginBtn').textContent='Checking...';
+ let res=await fetch('/api/auth',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({password:p})});
+ if(res.ok){
+   localStorage.setItem('admin_token',p);
+   document.getElementById('loginBox').classList.add('hidden');
+   document.getElementById('adminBox').classList.remove('hidden');
+   load();
+ }else{
+   document.getElementById('loginErr').textContent='❌ Wrong password!';
+   document.getElementById('loginBtn').textContent='Unlock Admin';
+ }
 }
+async function load(){let r=await fetch('/api/papers');let d=await r.json();if(Array.isArray(d))document.getElementById('list').innerHTML=d.map(p=>`<div class="border-b py-2 text-sm">${p.title}<button onclick="del(${p.id})" class="text-red-500 ml-2">Delete</button></div>`).join('')}
+async function savePaper(){
+ let token=localStorage.getItem('admin_token');
+ let body={title:title.value,subject:subject.value,year:year.value,uni:uni.value,course:course.value,link:link.value}
+ let res=await fetch('/api/papers',{method:'POST',headers:{'Content-Type':'application/json','x-admin-password':token},body:JSON.stringify(body)});
+ let txt=await res.text();document.getElementById('status').textContent=res.ok?'✅ Saved!':'❌ '+txt;
+ if(res.ok)load();
+}
+async function del(id){let t=localStorage.getItem('admin_token');await fetch('/api/papers?id='+id,{method:'DELETE',headers:{'x-admin-password':t}});load();}
 </script>
 </body>
 </html>
