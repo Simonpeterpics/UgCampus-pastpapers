@@ -9,7 +9,7 @@ export async function onRequestGet({ env }) {
 export async function onRequestPost({ request, env }) {
   try {
     let adminPass = request.headers.get("x-admin-password");
-    if (adminPass !== env.ADMIN_PASSWORD) {
+    if (adminPass.trim().toLowerCase() !== env.ADMIN_PASSWORD.trim().toLowerCase()) {
       return new Response(JSON.stringify({ error: "Unauthorized! Wrong admin password" }), { status: 401 });
     }
     let body = await request.json();
